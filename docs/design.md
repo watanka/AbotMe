@@ -20,7 +20,7 @@ graph TD
     
     subgraph 배포 환경
         I[GitHub Pages]
-        J[도커/클라우드]
+        J[Railway]
     end
     
     I --> A
@@ -46,8 +46,8 @@ graph TD
 - SQLite (메타데이터 저장)
 
 ### 인프라
-- Docker (백엔드)
-- GitHub Pages (프론트엔드)
+- Railway (백엔드 배포)
+- GitHub Pages (프론트엔드 배포)
 - GitHub Actions
 
 ## 3. 컴포넌트 구조
@@ -144,7 +144,7 @@ graph TD
     A[Push to develop]
     B[flake8 Linting]
     C[pytest Test]
-    D[Docker Build]
+    D[Backend Deploy to Railway]
     E[Frontend Build]
     F[GitHub Pages Deploy]
     
@@ -157,7 +157,7 @@ graph TD
 
 ### 배포 환경
 - **프론트엔드**: GitHub Pages (정적 사이트)
-- **백엔드**: Docker/클라우드 서비스
+- **백엔드**: Railway (Python 웹 서비스)
 - **개발**: 로컬 환경
 
 ## 8. 보안 고려사항

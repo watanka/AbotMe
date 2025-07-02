@@ -5,6 +5,7 @@
 - 사용자의 질문에 대해 내 정보를 기반으로 답변
 - 코딩 언어는 python을 사용하고, 라이브러리 관리는 uv로, 배포는 docker를 사용한다. 그리고 LLM은 langchain을 활용한다.
 - 프론트엔드는 React + react-chat-widget을 사용하여 GitHub Pages에 배포한다.
+- 백엔드는 Railway를 사용하여 배포한다.
 
 ## LLM 요구사항
 ### 데이터 처리
@@ -35,6 +36,6 @@
 ## 배포 전략
 - 최대한 무료로 배포한다.
 - GitHub Pages를 활용하여 프론트엔드 배포한다.
-- 백엔드는 Docker/클라우드 서비스에 배포한다.
+- Railway를 활용하여 백엔드 배포한다.
 - 업데이트 사항을 바로 반영할 수 있도록 CI/CD를 구성한다.
 - test, build, deploy를 위한 GitHub Actions를 구성한다.
