@@ -11,6 +11,11 @@
         "--line-length=88"
     ],
     "editor.codeActionsOnSave": {
-        "source.organizeImports": true
-    }
+        "source.organizeImports": true,
+        "source.fixAll.eslint": true
+    },
+    "eslint.validate": [
+        "javascript",
+        "javascriptreact"
+    ]
 }
