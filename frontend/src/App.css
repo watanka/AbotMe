@@ -1,5 +1,8 @@
 .App {
-  text-align: center;
+  min-height: 100vh;
+  background: #f4f7f9;
+  /* 채팅 위젯이 오른쪽 하단에 잘 보이도록 여백만 부여 */
+  padding-bottom: 100px;
 }
 
 .App-logo {
@@ -32,7 +35,15 @@
   from {
     transform: rotate(0deg);
   }
+
   to {
     transform: rotate(360deg);
   }
+}
+
+.main-layout {
+  display: flex;
+  height: 100vh;
+  width: 100vw;
+  background: #fff;
 }
