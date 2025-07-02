@@ -1,8 +1,7 @@
 import { render, screen } from '@testing-library/react';
 import App from './App';
 
-test('renders learn react link', () => {
-  render(<App />);
-  const linkElement = screen.getByText(/learn react/i);
-  expect(linkElement).toBeInTheDocument();
+test('프로필 이름이 화면에 보인다', () => {
+    render(<App />);
+    expect(screen.getByText('신은성')).toBeInTheDocument();
 });

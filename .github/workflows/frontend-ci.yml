@@ -29,9 +29,8 @@ jobs:
         run: npm install
 
       - name: Lint (eslint)
-        run: |
-          npm install eslint
-          npx eslint src --ext js,jsx
+        run: npm run lint
+
 
       - name: Run tests (jest)
         run: npm test -- --watchAll=false 
