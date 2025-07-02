@@ -1,0 +1,17 @@
+[flake8]
+max-line-length = 120
+ignore = 
+    E501,  # 줄 길이 제한
+    E302,  # 함수/클래스 정의 전 2줄 공백
+    E303,  # 너무 많은 공백
+    E203,  # 공백 관련
+    W291,  # 줄 끝 공백
+    W292,  # 파일 끝 개행
+    E722,  # bare except
+    F401,  # 사용하지 않는 import (선택적)
+    F841,  # 사용하지 않는 변수 (선택적)
+exclude = 
+    .venv,
+    __pycache__,
+    .git
+max-complexity = 15 
