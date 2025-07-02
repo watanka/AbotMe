@@ -1,0 +1,46 @@
+name: CI
+
+on:
+  push:
+    branches: [ "main", "feature/*", "ci/*" ]
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+  backend-test-build:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ./backend
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Install uv
+        run: pip install uv
+
+      - name: Install dependencies
+        run: uv pip install -r requirements.txt
+
+      - name: Lint (flake8)
+        run: |
+          pip install flake8
+          flake8 .
+
+      - name: Run FastAPI app test (import check)
+        run: |
+          python -c "import main"
+
+      - name: Run tests (pytest)
+        run: |
+          pip install pytest
+          pytest
+
+      - name: Build Docker image
+        run: |
+          docker build -t abotme-backend . 
