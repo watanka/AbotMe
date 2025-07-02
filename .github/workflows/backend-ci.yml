@@ -1,13 +1,17 @@
-name: CI
+name: Backend CI
 
 on:
   push:
-    branches: [ "develop", "feature/*", "ci/*" ]
+    paths:
+      - 'backend/**'
+      - '.github/workflows/backend-ci.yml'
   pull_request:
-    branches: [ "main" ]
+    paths:
+      - 'backend/**'
+      - '.github/workflows/backend-ci.yml'
 
 jobs:
-  backend-test-build:
+  backend-ci:
     runs-on: ubuntu-latest
     defaults:
       run:
@@ -35,8 +39,4 @@ jobs:
       - name: Run tests (pytest)
         run: |
           pip install pytest
-          pytest .
-
-      - name: Build Docker image
-        run: |
-          docker build -t abotme-backend . 
+          pytest 
