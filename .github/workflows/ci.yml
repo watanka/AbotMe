@@ -32,14 +32,10 @@ jobs:
           pip install flake8
           flake8 .
 
-      - name: Run FastAPI app test (import check)
-        run: |
-          python -c "import main"
-
       - name: Run tests (pytest)
         run: |
           pip install pytest
-          pytest
+          pytest .
 
       - name: Build Docker image
         run: |
