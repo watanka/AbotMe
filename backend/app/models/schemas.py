@@ -10,3 +10,8 @@ class ChatRequest(BaseModel):
 class ChatResponse(BaseModel):
     answer: str
     session_id: Optional[str] = None
+
+
+class FAQ(BaseModel):
+    question: str
+    answer: str

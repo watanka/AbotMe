@@ -1,9 +1,10 @@
 from fastapi import FastAPI
-from app.routers import chat
+from app.routers import chat, faq
 
 app = FastAPI()
 
 app.include_router(chat.router, prefix="/chat", tags=["chat"])
+app.include_router(faq.router, prefix="/faq", tags=["faq"])
 
 
 @app.get("/")

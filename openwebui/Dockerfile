@@ -1,1 +1,0 @@
-# OpenWebUI는 공식 이미지를 docker-compose에서 직접 사용합니다. 
