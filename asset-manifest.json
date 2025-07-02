@@ -1,10 +1,10 @@
 {
   "files": {
-    "main.css": "/abotme/static/css/main.1eed67e2.css",
-    "main.js": "/abotme/static/js/main.a6e8000c.js",
-    "index.html": "/abotme/index.html",
-    "main.1eed67e2.css.map": "/abotme/static/css/main.1eed67e2.css.map",
-    "main.a6e8000c.js.map": "/abotme/static/js/main.a6e8000c.js.map"
+    "main.css": "/AbotMe/static/css/main.1eed67e2.css",
+    "main.js": "/AbotMe/static/js/main.a6e8000c.js",
+    "index.html": "/AbotMe/index.html",
+    "main.1eed67e2.css.map": "/AbotMe/static/css/main.1eed67e2.css.map",
+    "main.a6e8000c.js.map": "/AbotMe/static/js/main.a6e8000c.js.map"
   },
   "entrypoints": [
     "static/css/main.1eed67e2.css",
