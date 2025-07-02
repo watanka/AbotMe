@@ -5,10 +5,7 @@ AI 챗봇 웹 애플리케이션입니다. 챗봇을 기반으로 사용자의 �
 ## 🚀 기술 스택
 
 ### 프론트엔드
-- React + TypeScript
-- Tailwind CSS
-- Shadcn/ui
-- react-hook-form
+- OpenWebUI
 
 ### 백엔드
 - FastAPI
