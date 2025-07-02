@@ -1,5 +1,5 @@
 from fastapi import FastAPI
-from backend.app.routers import chat, faq, history
+from app.routers import chat, faq, history
 
 app = FastAPI()
 
