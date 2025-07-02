@@ -3,7 +3,7 @@ from app.main import app
 
 client = TestClient(app)
 
-SESSION_ID = "test-session"
+SESSION_ID = "test-session-history-test"
 
 
 def test_history_accumulation():
