@@ -92,8 +92,7 @@ AbotMe/
 ├── frontend/         # React 프론트엔드
 │   ├── src/         # 소스 코드
 │   ├── public/      # 정적 파일
-│   ├── package.json
-│   └── tsconfig.json
+│   └── package.json
 ├── docs/             # 문서
 ├── .github/          # GitHub Actions
 ├── Makefile          # 개발 프로세스 자동화
