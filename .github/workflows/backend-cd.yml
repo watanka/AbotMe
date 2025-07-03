@@ -38,7 +38,7 @@ jobs:
         run: pip install uv
 
       - name: Generate requirements.txt from pyproject.toml
-        run: uv pip compile --output-file requirements.txt pyproject.toml
+        run: uv pip freeze > requirements.txt
 
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
