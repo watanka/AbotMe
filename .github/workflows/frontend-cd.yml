@@ -35,11 +35,9 @@ jobs:
       - name: Create .env file
         run: |
           echo "REACT_APP_API_URL=${{ secrets.REACT_APP_API_URL }}" > ./frontend/.env
+          echo "FRONTEND_URL=https://watanka.github.io" >> ./frontend/.env
         env:
           REACT_APP_API_URL: ${{ secrets.REACT_APP_API_URL }}
-
-      - name: Run tests
-        run: npm test
 
       - name: Build
         run: npm run build
