@@ -62,3 +62,13 @@ jobs:
           tags: ${{ steps.meta.outputs.tags }}
           cache-from: type=gha
           cache-to: type=gha,mode=max 
+
+      - name: Deploy to Railway
+        container: ghcr.io/railwayapp/cli:latest
+        env:
+          SVC_ID: ${{ secrets.SVC_ID }}
+          RAILWAY_TOKEN: ${{ secrets.RAILWAY_TOKEN }}
+        steps:
+          - name: Deploy
+            uses: actions/checkout@v3
+            run: railway up --service=${{ secrets.SVC_ID }}
