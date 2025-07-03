@@ -45,7 +45,7 @@ describe('ChatArea Integration Tests', () => {
   });
 
   test('sends message to backend', async () => {
-    const { container } = render(<ChatArea chatAPI={mockChatAPI} />);
+    render(<ChatArea chatAPI={mockChatAPI} />);
     
     // Type message
     const input = screen.getByRole('textbox');
@@ -64,7 +64,7 @@ describe('ChatArea Integration Tests', () => {
   });
 
   test('loads FAQ from backend', async () => {
-    const { container } = render(<ChatArea chatAPI={mockChatAPI} />);
+    render(<ChatArea chatAPI={mockChatAPI} />);
     
     // Click FAQ button
     await act(async () => {
@@ -78,7 +78,7 @@ describe('ChatArea Integration Tests', () => {
   });
 
   test('loads chat history on mount', async () => {
-    const { container } = render(<ChatArea chatAPI={mockChatAPI} />);
+    render(<ChatArea chatAPI={mockChatAPI} />);
     
     // Wait for history to be loaded
     await waitFor(() => {
