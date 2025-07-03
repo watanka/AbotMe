@@ -6,12 +6,6 @@ on:
     paths:
       - 'frontend/**'
       - '.github/workflows/frontend-cd.yml'
-  pull_request:
-    branches: [main]
-    types: [closed]
-    paths:
-      - 'frontend/**'
-      - '.github/workflows/frontend-cd.yml'
 
 jobs:
   frontend-cd:

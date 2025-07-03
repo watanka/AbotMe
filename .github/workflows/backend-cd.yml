@@ -8,12 +8,7 @@ on:
     paths:
       - 'backend/**'
       - '.github/workflows/backend-cd.yml'
-  pull_request:
-    branches:
-      - main
-    paths:
-      - 'backend/**'
-      - '.github/workflows/backend-cd.yml'
+
 
 jobs:
   backend-cd:
