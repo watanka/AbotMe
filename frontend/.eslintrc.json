@@ -2,7 +2,8 @@
     "env": {
         "browser": true,
         "es2021": true,
-        "jest": true
+        "jest": true,
+        "node": true
     },
     "extends": [
         "eslint:recommended",
@@ -20,6 +21,37 @@
     ],
     "rules": {
         "react/react-in-jsx-scope": "off",
-        "react/no-deprecated": "off"
-    }
+        "react/no-deprecated": "off",
+        "react/prop-types": "off",
+        "no-prototype-builtins": "warn",
+        "no-unused-vars": ["error", { 
+            "argsIgnorePattern": "^_",
+            "varsIgnorePattern": "^_",
+            "ignoreRestSiblings": true
+        }],
+        "no-undef": "warn",
+        "no-fallthrough": "warn",
+        "no-cond-assign": ["warn", "except-parens"],
+        "getter-return": "warn",
+        "valid-typeof": "warn",
+        "no-useless-escape": "warn",
+        "no-misleading-character-class": "warn",
+        "react/display-name": "warn",
+        "no-func-assign": "warn"
+    },
+    "globals": {
+        "process": true,
+        "module": true,
+        "MSApp": true,
+        "__REACT_DEVTOOLS_GLOBAL_HOOK__": true
+    },
+    "settings": {
+        "react": {
+            "version": "detect"
+        }
+    },
+    "ignorePatterns": [
+        "build/**/*",
+        "node_modules/**/*"
+    ]
 }

@@ -1,12 +1,12 @@
+import React from 'react';
 import './App.css';
 import ChatArea from './ChatArea';
-import ProfileSidebar from './ProfileSidebar';
+import { chatAPI } from './api/service';
 
 function App() {
   return (
-    <div className="main-layout">
-      <ProfileSidebar />
-      <ChatArea />
+    <div className="App">
+      <ChatArea chatAPI={chatAPI} />
     </div>
   );
 }
