@@ -20,6 +20,10 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
+      - name: Create .env file
+        run: |
+          echo "FRONTEND_URL=${{ secrets.FRONTEND_URL }}" > .env
+
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
@@ -27,6 +31,9 @@ jobs:
 
       - name: Install uv
         run: pip install uv
+
+      - name: Generate requirements.txt from pyproject.toml
+        run: uv pip freeze > requirements.txt
 
       - name: Install dependencies
         run: uv pip install --system -r requirements.txt
@@ -38,5 +45,5 @@ jobs:
 
       - name: Run tests (pytest)
         run: |
-          pip install pytest
-          pytest 
+          
+          uv run pytest 

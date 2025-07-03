@@ -92,8 +92,7 @@ AbotMe/
 ├── frontend/         # React 프론트엔드
 │   ├── src/         # 소스 코드
 │   ├── public/      # 정적 파일
-│   ├── package.json
-│   └── tsconfig.json
+│   └── package.json
 ├── docs/             # 문서
 ├── .github/          # GitHub Actions
 ├── Makefile          # 개발 프로세스 자동화
@@ -124,17 +123,17 @@ graph TD
 ## 6. 데이터 흐름
 ```mermaid
 sequenceDiagram
-    participant Widget as React 위젯
+    participant ChatUser
     participant FastAPI
     participant VectorDB
     participant LLM
     
-    Widget->>FastAPI: 질문 전송
+    ChatUser->>FastAPI: 질문 전송
     FastAPI->>VectorDB: 유사도 검색
     VectorDB-->>FastAPI: 관련 문서 반환
     FastAPI->>LLM: 프롬프트 생성 및 전송
     LLM-->>FastAPI: 답변 생성
-    FastAPI-->>Widget: 답변 전송
+    FastAPI-->>ChatUser: 답변 전송
 ```
 
 ## 7. 배포 전략
