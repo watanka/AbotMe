@@ -18,9 +18,9 @@ dependencies = [
     "anyio>=4.9.0",
     "black>=25.1.0",
     "click>=8.2.1",
-    "pydantic-core>=2.33.2",
+    "pydantic-core>=2.14.0",
+    "pydantic>=2.14.0",
     "pyflakes>=3.4.0",
     "starlette>=0.46.2",
-    "pydantic>=2.11.7",
     "chromadb>=1.0.15",
 ]
