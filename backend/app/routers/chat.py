@@ -1,6 +1,10 @@
-from fastapi import APIRouter
+from app.llm.llm_client import LangChainGeminiClient
+from app.llm.rag_engine import RAGEngine
+from app.llm.vector_store import ChromaVectorStore
+from app.llm.vector_store.embedding import GeminiEmbeddingModel
 from app.models.schemas import ChatRequest, ChatResponse
 from app.services.chat_service import get_chat_response
+from fastapi import APIRouter
 
 router = APIRouter()
 
@@ -18,4 +22,8 @@ def chat(request: ChatRequest):
     ]
     vector_store.add_documents(sample_docs)
 
+    llm_client = LangChainGeminiClient()
+    rag_engine = RAGEngine(vector_store, llm_client)
+    response = get_chat_response(rag_engine, request)
+    print(response.answer)
     return response
