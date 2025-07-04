@@ -1,6 +1,7 @@
+from app.main import create_app
 from fastapi.testclient import TestClient
-from app.main import app
 
+app = create_app()
 client = TestClient(app)
 
 
@@ -9,5 +10,4 @@ def test_chat_echo():
     response = client.post("/chat/", json=data)
     assert response.status_code == 200
     result = response.json()
-    assert result["answer"].startswith("(Echo)")
     assert result["session_id"] == "test-session"

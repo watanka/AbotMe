@@ -3,7 +3,7 @@
 ## 1. 시스템 아키텍처
 ```mermaid
 graph TD
-    A[React 채팅 위젯] --> B[FastAPI 서버]
+    A[React 채팅 앱] --> B[FastAPI 서버]
     B --> C[LLM 엔진]
     B --> D[Vector DB]
     D --> E[내 정보 저장소]
