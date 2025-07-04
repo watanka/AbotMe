@@ -9,8 +9,6 @@ from langchain.chat_models import init_chat_model
 
 from .base import LLMClient
 
-load_dotenv()
-
 
 class LangChainGeminiClient(LLMClient):
     def __init__(self, model: str = "gemini-2.0-flash-exp"):

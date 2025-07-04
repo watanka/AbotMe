@@ -9,8 +9,6 @@ from langchain_google_genai import GoogleGenerativeAIEmbeddings
 
 from .base import EmbeddingModel
 
-load_dotenv()
-
 
 class GeminiEmbeddingModel(EmbeddingModel):
     def __init__(
