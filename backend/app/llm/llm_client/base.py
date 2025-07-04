@@ -1,9 +1,11 @@
+"""
+LLMClient 추상화 (Base)
+"""
 from abc import ABC, abstractmethod
 
 class LLMClient(ABC):
     """
-    LLMClient는 다양한 LLM(대형 언어 모델) 제공자를 추상화하는 인터페이스입니다.
-    모든 LLM 구현체는 이 인터페이스를 구현해야 합니다.
+    다양한 LLM(대형 언어 모델) 제공자를 추상화하는 인터페이스
     """
     @abstractmethod
     def generate(self, prompt: str, **kwargs) -> str:
