@@ -22,4 +22,5 @@ dependencies = [
     "pyflakes>=3.4.0",
     "starlette>=0.46.2",
     "pydantic>=2.11.7",
+    "chromadb>=1.0.15",
 ]
