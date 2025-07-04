@@ -22,9 +22,8 @@ jobs:
 
       - name: Create .env file
         run: |
-          echo "FRONTEND_URL=${{ secrets.FRONTEND_URL }}\nGOOGLE_API_KEY=${{ secrets.GOOGLE_API_KEY }}" > .env
-          cat .env  # .env 파일 내용 확인
-          echo "GOOGLE_API_KEY 환경변수: $GOOGLE_API_KEY"  # 환경변수 직접 확인
+          echo "FRONTEND_URL=${{ secrets.FRONTEND_URL }}" > .env
+          echo "GOOGLE_API_KEY=${{ secrets.GOOGLE_API_KEY }}" >> .env
 
       - name: Set up Python
         uses: actions/setup-python@v5
