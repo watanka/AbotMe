@@ -1,6 +1,6 @@
 # env
 **/.env
-
+backend/google-credentials.json
 
 # Python
 _pycache__/

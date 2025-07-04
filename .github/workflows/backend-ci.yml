@@ -23,6 +23,7 @@ jobs:
       - name: Create .env file
         run: |
           echo "FRONTEND_URL=${{ secrets.FRONTEND_URL }}" > .env
+          echo "GOOGLE_API_KEY=${{ secrets.GOOGLE_API_KEY }}" >> .env
 
       - name: Set up Python
         uses: actions/setup-python@v5
