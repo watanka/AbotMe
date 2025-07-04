@@ -2,6 +2,8 @@
 Google Vertex AI Embedding 구현 및 인증/셋팅
 """
 
+import os
+
 from langchain_google_genai import GoogleGenerativeAIEmbeddings
 
 from .base import EmbeddingModel
@@ -12,6 +14,9 @@ class GeminiEmbeddingModel(EmbeddingModel):
         self,
         model_name: str = "models/embedding-001",
     ):
+        api_key = os.getenv("GOOGLE_API_KEY")
+        if not api_key:
+            raise ValueError("GOOGLE_API_KEY 환경변수가 설정되어 있지 않습니다.")
         self.model_name = model_name
 
     def get_model(self):
