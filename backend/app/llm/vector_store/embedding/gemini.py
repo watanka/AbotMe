@@ -17,6 +17,7 @@ class GeminiEmbeddingModel(EmbeddingModel):
         self,
         model_name: str = "models/embedding-001",
     ):
+        load_dotenv()
         api_key = os.getenv("GOOGLE_API_KEY")
         if not api_key:
             raise ValueError("GOOGLE_API_KEY 환경변수가 설정되어 있지 않습니다.")

@@ -14,6 +14,7 @@ load_dotenv()
 
 class LangChainGeminiClient(LLMClient):
     def __init__(self, model: str = "gemini-2.0-flash-exp"):
+        load_dotenv()
         api_key = os.getenv("GOOGLE_API_KEY")
         if not api_key:
             raise ValueError("GOOGLE_API_KEY 환경변수가 설정되어 있지 않습니다.")
