@@ -4,9 +4,12 @@ Google Vertex AI Embedding 구현 및 인증/셋팅
 
 import os
 
+from dotenv import load_dotenv
 from langchain_google_genai import GoogleGenerativeAIEmbeddings
 
 from .base import EmbeddingModel
+
+load_dotenv()
 
 
 class GeminiEmbeddingModel(EmbeddingModel):

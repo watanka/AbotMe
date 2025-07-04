@@ -4,9 +4,12 @@ LangChain 기반 Gemini LLMClient 구현
 
 import os
 
+from dotenv import load_dotenv
 from langchain.chat_models import init_chat_model
 
 from .base import LLMClient
+
+load_dotenv()
 
 
 class LangChainGeminiClient(LLMClient):
