@@ -8,7 +8,7 @@ from fastapi.middleware.cors import CORSMiddleware
 def setup_cors(app):
     load_dotenv()
 
-    frontend_url = os.getenv("FRONTEND_URL", "http://localhost:3000")
+    frontend_url = os.getenv("FRONTEND_URL", "https://watanka.github.io")
 
     app.add_middleware(
         CORSMiddleware,
