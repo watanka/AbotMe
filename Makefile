@@ -42,6 +42,23 @@ backend-clean:
 	find . -type f -name "*.pyc" -delete 2>/dev/null || true
 	find . -type f -name "*.pyo" -delete 2>/dev/null || true
 
+backend-build:
+	@echo "📦 도커 이미지 빌드 중..."
+	cd backend && uv pip freeze > requirements.txt && docker build -t eshin94/abotme:latest .
+
+backend-image-push:
+	@echo "🚀 도커 이미지 푸시 중..."
+	cd backend && docker push eshin94/abotme:latest
+
+backend-image-pull:
+	@echo "🚀 도커 이미지 풀링 중..."
+	docker pull eshin94/abotme:latest
+
+backend-image-run:
+	@echo "🚀 도커 이미지 실행 중..."
+	docker run --rm --name abotme-backend -p 8000:8000 eshin94/abotme:latest
+
+
 backend:
 	cd backend && set -a && [ -f .env ] && set +a && uv run uvicorn app.main:app --host 0.0.0.0 --port 8000
 
