@@ -66,6 +66,11 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
+      - name: Create .env file
+        run: |
+          sudo apt-get update && sudo apt-get install -y jq
+          jq --arg frontend_url "${{ secrets.FRONTEND_URL }}" --arg google_api_key "${{ secrets.GOOGLE_API_KEY }}"\
+            '.env = { FRONTEND_URL: $frontend_url, GOOGLE_API_KEY: $google_api_key }' railway.json > tmp && mv tmp railway.json
       - name: Deploy to Railway
         env:
           SVC_ID: ${{ secrets.SVC_ID }}
