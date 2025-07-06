@@ -66,11 +66,10 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
+        
       - name: Install jq without sudo
-        run: |
-          apt-get update
-          apt-get install -y jq
-      
+        run: apt install -y jq
+
       - name: Create railway file
         run: |
           jq --arg frontend_url "${{ secrets.FRONTEND_URL }}" --arg google_api_key "${{ secrets.GOOGLE_API_KEY }}"\
