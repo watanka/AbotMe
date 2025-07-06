@@ -5,12 +5,13 @@ from app.llm.vector_store.embedding import GeminiEmbeddingModel
 from app.models.schemas import ChatRequest, ChatResponse
 from app.services.chat_service import get_chat_response
 from fastapi import APIRouter
+from typing import Optional
 
 router = APIRouter()
 
 
 @router.post("/", response_model=ChatResponse)
-def chat(request: ChatRequest):
+def chat(request: Optional[ChatRequest] = None):
 
     vector_store = ChromaVectorStore("./chroma_db", GeminiEmbeddingModel())
 
