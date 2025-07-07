@@ -21,10 +21,12 @@ def get_chat_response(rag_engine: RAGEngine, request: ChatRequest) -> ChatRespon
         add_history(request.session_id, HistoryItem(role="bot", message=answer))
     return ChatResponse(answer=answer, session_id=request.session_id)
 
+
 def stream_chat_response(rag_engine: RAGEngine, request: ChatRequest):
     """
     사용자의 메시지를 받아 Gemini LLM을 통해 응답을 스트림으로 생성합니다.
     """
+
     def answer_stream():
         if request.session_id:
             add_history(
@@ -39,5 +41,8 @@ def stream_chat_response(rag_engine: RAGEngine, request: ChatRequest):
             yield f"[ERROR: LLM 호출 실패] {str(e)}"
         if request.session_id:
             # 비동기 호출
-            add_history(request.session_id, HistoryItem(role="bot", message="".join(answer)))
+            add_history(
+                request.session_id, HistoryItem(role="bot", message="".join(answer))
+            )
+
     return StreamingResponse(answer_stream(), media_type="text/plain")

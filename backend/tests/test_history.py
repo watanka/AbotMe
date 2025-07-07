@@ -1,7 +1,11 @@
 from app.main import create_app
 from fastapi.testclient import TestClient
 from app.dependencies import get_llm_client, get_vector_store, get_rag_engine
-from tests.utils.mocks import get_mock_rag_engine, get_mock_vector_store, get_mock_llm_client
+from tests.utils.mocks import (
+    get_mock_rag_engine,
+    get_mock_vector_store,
+    get_mock_llm_client,
+)
 
 app = create_app()
 client = TestClient(app)

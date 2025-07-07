@@ -17,8 +17,10 @@ def get_vector_store() -> VectorStore:
     vector_store.add_documents(sample_docs)
     return vector_store
 
+
 def get_llm_client() -> LLMClient:
     return LangChainGeminiClient()
+
 
 def get_rag_engine(
     vector_store: VectorStore = Depends(get_vector_store),

@@ -21,5 +21,3 @@ class LangChainGeminiClient(LLMClient):
     def generate(self, prompt: str, **kwargs) -> str:
         for chunk in self.llm.stream(prompt):
             yield chunk.content
-
-

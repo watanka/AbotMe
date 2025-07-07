@@ -8,7 +8,6 @@ from app.llm.llm_client import LLMClient
 from app.llm.vector_store import VectorStore
 
 
-
 class RAGEngine:
     """
     LLM과 벡터스토어(VectorStore)를 결합한 RAG 엔진
@@ -29,7 +28,3 @@ class RAGEngine:
         prompt = f"다음 정보를 참고해서 답변해줘.\n정보:\n{context}\n\n질문: {query}"
         for chunk in self.llm_client.generate(prompt):
             yield chunk
-
-
-
-    
