@@ -1,13 +1,13 @@
 {
   "files": {
     "main.css": "/AbotMe/static/css/main.36869823.css",
-    "main.js": "/AbotMe/static/js/main.c8b9f944.js",
+    "main.js": "/AbotMe/static/js/main.45000071.js",
     "index.html": "/AbotMe/index.html",
     "main.36869823.css.map": "/AbotMe/static/css/main.36869823.css.map",
-    "main.c8b9f944.js.map": "/AbotMe/static/js/main.c8b9f944.js.map"
+    "main.45000071.js.map": "/AbotMe/static/js/main.45000071.js.map"
   },
   "entrypoints": [
     "static/css/main.36869823.css",
-    "static/js/main.c8b9f944.js"
+    "static/js/main.45000071.js"
   ]
 }
