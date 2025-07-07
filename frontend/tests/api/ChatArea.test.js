@@ -23,12 +23,14 @@ describe('ChatArea Integration Tests', () => {
     // 스트리밍 mock 함수 준비
     const chunks = ['안', '녕', '하', '세', '요'];
     const sendMessageStream = jest.fn((msg, onChunk) => {
-      return new Promise(async (resolve) => {
-        for (const chunk of chunks) {
-          await new Promise(res => setTimeout(res, 1));
-          onChunk(chunk);
-        }
-        resolve();
+      return new Promise((resolve) => {
+        (async () => {
+          for (const chunk of chunks) {
+            await new Promise(res => setTimeout(res, 1));
+            onChunk(chunk);
+          }
+          resolve();
+        })();
       });
     });
     const chatAPI = {
