@@ -62,6 +62,9 @@ backend-image-run:
 backend:
 	cd backend && set -a && [ -f .env ] && set +a && uv run uvicorn app.main:app --host 0.0.0.0 --port 8000
 
+frontend-test:
+	cd frontend && npm run test
+
 frontend:
 	cd frontend && set -a && [ -f .env ] && set +a && npm run start
 
