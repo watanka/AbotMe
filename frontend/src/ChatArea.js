@@ -16,24 +16,37 @@ export default function ChatArea({ chatAPI }) {
 
     const handleSend = async (msg) => {
         if (!msg.trim()) return;
-        
-        try {
-            setIsLoading(true);
-            const userMessage = { from: 'user', text: msg };
-            setMessages((prev) => [...prev, userMessage]);
-            setInput('');
 
-            // Send message to backend
-            const response = await chatAPI.sendMessage(msg);
-            setMessages((prev) => [...prev, { from: 'bot', text: response.answer }]);
+        setIsLoading(true);
+        const userMessage = { from: 'user', text: msg };
+        setMessages((prev) => [...prev, userMessage]);
+        setInput('');
+
+        // 스트리밍 응답 처리
+        let botMsg = { from: 'bot', text: '' };
+        setMessages((prev) => [...prev, botMsg]);
+        try {
+            await chatAPI.sendMessageStream(
+                msg,
+                (chunk) => {
+                    botMsg.text += chunk;
+                    setMessages((prev) => {
+                        const updated = [...prev];
+                        updated[updated.length - 1] = { ...botMsg };
+                        return updated;
+                    });
+                }
+            );
         } catch (error) {
-            console.error('Error:', error);
-            setMessages((prev) => [...prev, { from: 'bot', text: '죄송합니다. 서버와의 통신에 문제가 발생했습니다.' }]);
+            setMessages((prev) => [
+                ...prev.slice(0, -1),
+                { from: 'bot', text: '죄송합니다. 서버와의 통신에 문제가 발생했습니다.' }
+            ]);
         } finally {
             setIsLoading(false);
         }
-        
     };
+
 
     const handleFAQ = async (question) => {
         if (!chatAPI) return;

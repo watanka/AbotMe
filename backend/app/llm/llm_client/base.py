@@ -1,12 +1,15 @@
 """
 LLMClient 추상화 (Base)
 """
+
 from abc import ABC, abstractmethod
+
 
 class LLMClient(ABC):
     """
     다양한 LLM(대형 언어 모델) 제공자를 추상화하는 인터페이스
     """
+
     @abstractmethod
     def generate(self, prompt: str, **kwargs) -> str:
         """

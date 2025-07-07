@@ -28,7 +28,7 @@ backend-lint:
 # 테스트 실행 (pytest)
 backend-test:
 	@echo "🧪 테스트 실행 중..."
-	cd backend && . .venv/bin/activate && pytest
+	cd backend && . .venv/bin/activate && pytest -s -v
 
 # 코드 포맷팅 (black)
 backend-format:
@@ -61,6 +61,9 @@ backend-image-run:
 
 backend:
 	cd backend && set -a && [ -f .env ] && set +a && uv run uvicorn app.main:app --host 0.0.0.0 --port 8000
+
+frontend-test:
+	cd frontend && npm run test
 
 frontend:
 	cd frontend && set -a && [ -f .env ] && set +a && npm run start
