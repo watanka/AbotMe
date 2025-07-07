@@ -20,10 +20,11 @@ class RAGEngine:
     def retrieve_context(self, query: str, k: int = 5):
         return self.vector_store.similarity_search(query, k=k)
 
-    def generate_answer(self, query: str, k: int = 5) -> str:
+    def generate_answer(self, query: str, k: int = 5):
         context_docs = self.retrieve_context(query, k)
         context = "\n".join(
             [getattr(doc, "page_content", str(doc)) for doc in context_docs]
         )
         prompt = f"다음 정보를 참고해서 답변해줘.\n정보:\n{context}\n\n질문: {query}"
-        return self.llm_client.generate(prompt)
+        for chunk in self.llm_client.generate(prompt):
+            yield chunk
