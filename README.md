@@ -6,7 +6,7 @@ AI 챗봇 웹 애플리케이션입니다. 챗봇을 기반으로 사용자의 �
 - 다양한 데이터(PDF, GitHub, 블로그, LinkedIn 등) 기반으로 나를 소개하는 LLM 챗봇 제공
 - React 기반 채팅 위젯으로 사용자 친화적 인터페이스
 - FastAPI, Langchain, ChromaDB 등 최신 기술 활용
-- GitHub Pages + Railway를 통한 무료 배포
+- GitHub Pages + Google Cloud Run를 통한 무료 배포
 
 ## 폴더 구조
 
@@ -18,30 +18,16 @@ AI 챗봇 웹 애플리케이션입니다. 챗봇을 기반으로 사용자의 �
 ## 기술 스택
 - **프론트엔드**: React, react-chat-widget, TypeScript
 - **백엔드**: Python, FastAPI, Langchain, ChromaDB, uv
-- **배포**: GitHub Pages (프론트엔드), Railway (백엔드)
+- **배포**: GitHub Pages (프론트엔드), Google Cloud Run (백엔드)
 - **CI/CD**: GitHub Actions
 
 ## 실행 방법
 
 ### 로컬 개발
 ```bash
-# 1. 백엔드 의존성 설치
-make install
-
-# 2. 코드 검사
-make check
-
-# 3. 백엔드 실행
-cd backend && source .venv/bin/activate && uvicorn app.main:app --reload
-
-# 4. 프론트엔드 실행 (새 터미널)
-cd frontend && npm install && npm start
+make dev
 ```
 
-### 도커로 전체 서비스 실행
-```bash
-docker-compose up --build
-```
 
 ## 개발 프로세스
 
@@ -67,7 +53,7 @@ graph TD
     D --> E[내 정보 저장소]
     
     F[GitHub Pages] --> A
-    G[Railway] --> B
+    G[Google Cloud Run] --> B
 ```
 
 ## CI/CD
@@ -75,7 +61,7 @@ graph TD
 - develop 브랜치에 push 시 워크플로우 실행
 - flake8, pytest, Docker 빌드 자동 검사
 - 프론트엔드 자동 배포 (GitHub Pages)
-- 백엔드 자동 배포 (Railway)
+- 백엔드 자동 배포 (Google Cloud Run)
 
 ## 기여 가이드
 - 브랜치/커밋/PR 컨벤션: docs/git_conventions.md 참고
