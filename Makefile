@@ -28,7 +28,7 @@ backend-lint:
 # 테스트 실행 (pytest)
 backend-test:
 	@echo "🧪 테스트 실행 중..."
-	cd backend && . .venv/bin/activate && pytest
+	cd backend && . .venv/bin/activate && pytest -s -v
 
 # 코드 포맷팅 (black)
 backend-format:
