@@ -1,12 +1,10 @@
-from typing import List
-from pathlib import Path
+from typing import List, Optional
 from PyPDF2 import PdfReader
 from langchain.text_splitter import RecursiveCharacterTextSplitter
 import chromadb
 from chromadb.config import Settings
 from app.data_pipeline.base import Extractor, Chunker, VectorStoreSaver
-from langchain.prompts import PromptTemplate
-
+from langfuse.langchain import CallbackHandler
 
 class PDFResumeExtractor(Extractor):
     def extract(self, pdf_path: str) -> str:
@@ -31,16 +29,15 @@ class SimpleTextChunker(Chunker):
         return splitter.split_text(text)
 
 
+
 class AgenticTextChunker(Chunker):
     def __init__(self, template: str, llm):
-        self.prompt_template = PromptTemplate(
-            input_variables=["input"], template=template
-        )
+        self.prompt_template = template
         self.llm = llm
 
-    def chunk(self, text: str) -> List[str]:
+    def chunk(self, text: str, callback: Optional[CallbackHandler] = None) -> List[str]:
         runnable = self.prompt_template | self.llm
-        runnable_output = runnable.invoke({"input": text}).content
+        runnable_output = runnable.invoke({"input": text}, config={"callbacks":[callback]}).content
         chunks = [chunk.strip() for chunk in runnable_output.split("-")]
         return chunks
 
