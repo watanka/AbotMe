@@ -9,9 +9,9 @@ from app.llm.vector_store.chroma import ChromaVectorStore
 from app.llm.vector_store.embedding import GeminiEmbeddingModel
 
 
-
 load_dotenv()
 vector_store_dir = os.getenv("VECTOR_STORE_DIR", "./vector-db")
+
 
 def get_vector_store() -> VectorStore:
     vector_store = ChromaVectorStore(vector_store_dir, GeminiEmbeddingModel())

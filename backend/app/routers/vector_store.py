@@ -5,6 +5,7 @@ import os
 
 router = APIRouter()
 
+
 @router.post("/pdf")
 def pdf_to_vector_store(pdf: UploadFile = File(...)):
     """
