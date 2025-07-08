@@ -19,5 +19,8 @@ class LangChainGeminiClient(LLMClient):
         self.llm = init_chat_model(model, model_provider="google_genai")
 
     def generate(self, prompt: str, **kwargs) -> str:
-        for chunk in self.llm.stream(prompt):
+        callback = kwargs.get("callback", None)
+        for chunk in self.llm.stream(
+            prompt, config={"callbacks": [callback] if callback else []}
+        ):
             yield chunk.content

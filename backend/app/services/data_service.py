@@ -8,6 +8,8 @@ from app.data_pipeline.pdf_resume import (
 from app.data_pipeline.prompts import resume_prompt
 from dotenv import load_dotenv
 from langchain_google_genai import ChatGoogleGenerativeAI
+from langchain_core.prompts import ChatPromptTemplate
+from langfuse.langchain import CallbackHandler
 from app.llm.vector_store.chroma import ChromaVectorStore
 from app.llm.vector_store.embedding import GeminiEmbeddingModel
 
@@ -21,13 +23,18 @@ def run_resume_pipeline(
     pdf_path: str, persist_dir: str = vector_store_dir, collection_name: str = "resume"
 ):
     extractor = PDFResumeExtractor()
-    chunker = AgenticTextChunker(template=resume_prompt, llm=llm)
+    prompt = ChatPromptTemplate.from_template(
+        resume_prompt.get_langchain_prompt(),
+        metadata={"langfuse_prompt": resume_prompt},
+    )
+    langfuse_callback_handler = CallbackHandler()
+    chunker = AgenticTextChunker(template=prompt, llm=llm)
     vector_store = ChromaVectorStore(persist_dir, GeminiEmbeddingModel())
 
     assert Path(pdf_path).exists(), f"PDF not found: {pdf_path}"
     text = extractor.extract(pdf_path)
     print("[INFO] PDF 텍스트 추출 완료")
-    chunks = chunker.chunk(text)
+    chunks = chunker.chunk(text, callback=langfuse_callback_handler)
     print(f"[INFO] {len(chunks)}개 청크로 분할 완료")
     vector_store.add_documents(chunks)
     print(f"[INFO] ChromaDB에 저장 완료: {persist_dir}/{collection_name}")
