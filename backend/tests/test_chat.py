@@ -10,6 +10,7 @@ from tests.utils.mocks import (
 app = create_app()
 client = TestClient(app)
 
+
 def test_chat_streaming():
     app.dependency_overrides[get_rag_engine] = get_mock_rag_engine
     app.dependency_overrides[get_vector_store] = get_mock_vector_store
