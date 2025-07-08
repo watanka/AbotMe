@@ -6,6 +6,7 @@ from langfuse.langchain import CallbackHandler
 
 langfuse_callback_handler = CallbackHandler()
 
+
 def get_chat_response(rag_engine: RAGEngine, request: ChatRequest) -> ChatResponse:
     """
     사용자의 메시지를 받아 Gemini LLM을 통해 응답을 생성합니다.
@@ -16,7 +17,9 @@ def get_chat_response(rag_engine: RAGEngine, request: ChatRequest) -> ChatRespon
             request.session_id, HistoryItem(role="user", message=request.message)
         )
     try:
-        answer = rag_engine.generate_answer(request.message, callback=langfuse_callback_handler)
+        answer = rag_engine.generate_answer(
+            request.message, callback=langfuse_callback_handler
+        )
     except Exception as e:
         answer = f"[ERROR: LLM 호출 실패] {str(e)}"
     if request.session_id:
@@ -36,7 +39,9 @@ def stream_chat_response(rag_engine: RAGEngine, request: ChatRequest):
             )
         try:
             answer = []
-            for chunk in rag_engine.generate_answer(request.message, callback=langfuse_callback_handler):
+            for chunk in rag_engine.generate_answer(
+                request.message, callback=langfuse_callback_handler
+            ):
                 answer.append(chunk)
                 yield chunk
         except Exception as e:

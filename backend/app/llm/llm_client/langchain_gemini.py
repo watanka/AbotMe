@@ -20,5 +20,7 @@ class LangChainGeminiClient(LLMClient):
 
     def generate(self, prompt: str, **kwargs) -> str:
         callback = kwargs.get("callback", None)
-        for chunk in self.llm.stream(prompt, config={'callbacks': [callback] if callback else []}):
+        for chunk in self.llm.stream(
+            prompt, config={"callbacks": [callback] if callback else []}
+        ):
             yield chunk.content

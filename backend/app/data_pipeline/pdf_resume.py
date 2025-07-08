@@ -6,6 +6,7 @@ from chromadb.config import Settings
 from app.data_pipeline.base import Extractor, Chunker, VectorStoreSaver
 from langfuse.langchain import CallbackHandler
 
+
 class PDFResumeExtractor(Extractor):
     def extract(self, pdf_path: str) -> str:
         reader = PdfReader(pdf_path)
@@ -29,7 +30,6 @@ class SimpleTextChunker(Chunker):
         return splitter.split_text(text)
 
 
-
 class AgenticTextChunker(Chunker):
     def __init__(self, template: str, llm):
         self.prompt_template = template
@@ -37,7 +37,9 @@ class AgenticTextChunker(Chunker):
 
     def chunk(self, text: str, callback: Optional[CallbackHandler] = None) -> List[str]:
         runnable = self.prompt_template | self.llm
-        runnable_output = runnable.invoke({"input": text}, config={"callbacks":[callback]}).content
+        runnable_output = runnable.invoke(
+            {"input": text}, config={"callbacks": [callback]}
+        ).content
         chunks = [chunk.strip() for chunk in runnable_output.split("-")]
         return chunks
 
