@@ -2,7 +2,9 @@ from app.llm.rag_engine import RAGEngine
 from app.models.schemas import ChatRequest, ChatResponse, HistoryItem
 from app.services.history_service import add_history
 from fastapi.responses import StreamingResponse
+from langfuse.langchain import CallbackHandler
 
+langfuse_callback_handler = CallbackHandler()
 
 def get_chat_response(rag_engine: RAGEngine, request: ChatRequest) -> ChatResponse:
     """
@@ -14,7 +16,7 @@ def get_chat_response(rag_engine: RAGEngine, request: ChatRequest) -> ChatRespon
             request.session_id, HistoryItem(role="user", message=request.message)
         )
     try:
-        answer = rag_engine.generate_answer(request.message)
+        answer = rag_engine.generate_answer(request.message, callback=langfuse_callback_handler)
     except Exception as e:
         answer = f"[ERROR: LLM 호출 실패] {str(e)}"
     if request.session_id:
@@ -34,7 +36,7 @@ def stream_chat_response(rag_engine: RAGEngine, request: ChatRequest):
             )
         try:
             answer = []
-            for chunk in rag_engine.generate_answer(request.message):
+            for chunk in rag_engine.generate_answer(request.message, callback=langfuse_callback_handler):
                 answer.append(chunk)
                 yield chunk
         except Exception as e:

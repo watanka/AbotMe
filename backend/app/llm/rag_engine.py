@@ -6,6 +6,8 @@ RAGEngine: LLM + VectorStore 결합 추상화
 
 from app.llm.llm_client import LLMClient
 from app.llm.vector_store import VectorStore
+from langfuse.langchain import CallbackHandler
+from typing import Optional
 
 
 class RAGEngine:
@@ -20,7 +22,7 @@ class RAGEngine:
     def retrieve_context(self, query: str, k: int = 5):
         return self.vector_store.similarity_search(query, k=k)
 
-    def generate_answer(self, query: str, k: int = 5):
+    def generate_answer(self, query: str, k: int = 5, callback: Optional[CallbackHandler] = None):
         context_docs = self.retrieve_context(query, k)
         context = "\n".join(
             [getattr(doc, "page_content", str(doc)) for doc in context_docs]
@@ -38,5 +40,5 @@ class RAGEngine:
 답변이 추정이나 일반 상식에 근거한 경우, 그 점도 함께 밝혀 주세요.
 만약 답변하기 어렵거나 모르는 정보라면, 모른다고 해도 괜찮아요.
 """
-        for chunk in self.llm_client.generate(prompt):
+        for chunk in self.llm_client.generate(prompt, callback=callback):
             yield chunk
