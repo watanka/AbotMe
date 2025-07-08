@@ -3,12 +3,13 @@ from pathlib import Path
 
 from app.data_pipeline.pdf_resume import (
     AgenticTextChunker,
-    ChromaVectorStoreSaver,
     PDFResumeExtractor,
 )
 from app.data_pipeline.prompts import resume_prompt
 from dotenv import load_dotenv
 from langchain_google_genai import ChatGoogleGenerativeAI
+from app.llm.vector_store.chroma import ChromaVectorStore
+from app.llm.vector_store.embedding import GeminiEmbeddingModel
 
 load_dotenv()
 api_key = os.getenv("GOOGLE_API_KEY")
@@ -21,16 +22,14 @@ def run_resume_pipeline(
 ):
     extractor = PDFResumeExtractor()
     chunker = AgenticTextChunker(template=resume_prompt, llm=llm)
-    saver = ChromaVectorStoreSaver(
-        persist_dir=persist_dir, collection_name=collection_name
-    )
+    vector_store = ChromaVectorStore(persist_dir, GeminiEmbeddingModel())
 
     assert Path(pdf_path).exists(), f"PDF not found: {pdf_path}"
     text = extractor.extract(pdf_path)
     print("[INFO] PDF 텍스트 추출 완료")
     chunks = chunker.chunk(text)
     print(f"[INFO] {len(chunks)}개 청크로 분할 완료")
-    saver.save(chunks)
+    vector_store.add_documents(chunks)
     print(f"[INFO] ChromaDB에 저장 완료: {persist_dir}/{collection_name}")
 
 

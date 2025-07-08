@@ -15,7 +15,9 @@ class ChromaVectorStore(VectorStore):
         self.persist_directory = persist_directory
         self.embeddings = embedding_engine.get_model()
         self.db = Chroma(
-            embedding_function=self.embeddings, persist_directory=self.persist_directory
+            embedding_function=self.embeddings,
+            persist_directory=self.persist_directory,
+            collection_name="resume",
         )
 
     def add_documents(
