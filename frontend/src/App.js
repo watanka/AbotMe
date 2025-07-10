@@ -1,12 +1,12 @@
 import React from 'react';
 import './App.css';
-import ChatArea from './ChatArea';
-import { chatAPI } from './api/service';
+import HomePage from './pages/HomePage';
 
 function App() {
   return (
     <div className="App">
-      <ChatArea chatAPI={chatAPI} />
+      {/* <ChatArea chatAPI={chatAPI} /> */}
+      <HomePage />
     </div>
   );
 }
