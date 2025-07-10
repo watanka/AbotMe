@@ -63,9 +63,8 @@ function ErrorBanner({ message }) {
 }
 
 // ResumeViewer 컨테이너
-export default function ResumeViewer() {
+export default function ResumeViewer({ pdfUrl }) {
     // 상수 및 상태
-    const pdfUrl = "/resume.pdf";
     const maxWidth = PAGE_MAX_WIDTH;
     const minWidth = PAGE_MIN_WIDTH;
     const [numPages, setNumPages] = useState(null);

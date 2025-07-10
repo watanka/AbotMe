@@ -1,13 +1,10 @@
 import React from 'react';
 import './App.css';
-import HomePage from './pages/HomePage';
+import ResumeFlowContainer from './components/ResumeFlowContainer';
 
 function App() {
   return (
-    <div className="App">
-      {/* <ChatArea chatAPI={chatAPI} /> */}
-      <HomePage />
-    </div>
+    <ResumeFlowContainer />
   );
 }
 
