@@ -7,7 +7,7 @@ from app.services.data_service import run_resume_pipeline
 router = APIRouter()
 
 # In-memory storage 예시 (실 서비스에서는 DB/파일시스템/벡터스토어 등으로 대체)
-RESUMES = {}  # resume_id: {pdf_path, edit_token, questions, answers}
+RESUME = {}  
 
 # Helper: edit_token 검증
 def verify_edit_token(edit_token: str):
@@ -17,38 +17,38 @@ def verify_edit_token(edit_token: str):
 # 1. 이력서 업로드 (최초 등록)
 @router.post("/")
 def upload_resume(file: UploadFile = File(...), name: str = Form(...), email: str = Form(...)):
+    global RESUME
     # 실제 구현 시: 파일 저장, id/토큰 생성, DB 저장 등
-    import uuid
-    edit_token = str(uuid.uuid4())
-    save_path = f"/tmp/{name}_{file.filename}"
+    # TODO: 파일 저장 경로 수정
+    save_path = f"/home/silver/workspace/AbotMe/frontend/public/{name}_{file.filename}"
     with open(save_path, "wb") as f:
         f.write(file.file.read())
     # 벡터스토어 저장 (기존 파이프라인 활용)
-    run_resume_pipeline(save_path)
-    RESUMES[edit_token] = {
+    # run_resume_pipeline(save_path)
+    RESUME = {
         'pdf_path': save_path,
-        'edit_token': edit_token,
         'questions': [],
         'answers': [],
         'name': name,
         'email': email
     }
-    public_url = f"/resume"
-    return {"edit_token": edit_token, "public_url": public_url}
+    public_url = f"/{name}_{file.filename}"
+    return {"public_url": public_url}
 
 
 # 2. 이력서/질문/답변 데이터 조회 (공개)
 @router.get("/")
 def get_resume():
-    resume = RESUMES.get(edit_token)
-    if not resume:
+    global RESUME
+    if not RESUME:
         raise HTTPException(status_code=404, detail="존재하지 않는 이력서")
+    
     return {
-        "resume_pdf_url": resume['pdf_path'],
-        "questions": resume.get('questions', []),
-        "answers": resume.get('answers', {}),
-        "name": resume.get('name'),
-        "email": resume.get('email')
+        "pdf_url": RESUME.get('pdf_path').split('/')[-1], # /public 기준으로 변경
+        "questions": RESUME.get('questions', []),
+        "answers": RESUME.get('answers', {}),
+        "name": RESUME.get('name'),
+        "email": RESUME.get('email')
     }
 
 
@@ -56,9 +56,8 @@ def get_resume():
 
 
 @router.post("/generate-questions")
-def generate_questions(edit_token: str = Form(...)):
-    verify_edit_token(edit_token)
-    pdf_path = RESUMES[edit_token].get('pdf_path')
+def generate_questions():
+    pdf_path = RESUME.get('pdf_path')
     if not pdf_path:
         raise HTTPException(status_code=400, detail="업로드된 이력서가 없습니다.")
     # TODO: LLM 기반 질문 생성 로직 (임시 예시)
@@ -66,25 +65,23 @@ def generate_questions(edit_token: str = Form(...)):
         {str(uuid.uuid4()): "이 프로젝트에서 가장 어려웠던 점은?"},
         {str(uuid.uuid4()): "협업 경험을 구체적으로 설명해주세요."}
     ]
-    RESUMES[edit_token]['questions'] = questions
-    RESUMES[edit_token]['answers'] = {}  # question_id: answer
+    RESUME['questions'] = questions
+    RESUME['answers'] = {}  # question_id: answer
     return {"questions": questions}
 
 @router.get("/questions/{question_id}")
-def get_question(question_id: str, edit_token: str = Form(...)):
-    verify_edit_token(edit_token)
-    return RESUMES[edit_token].get('questions').get(question_id)
+def get_question(question_id: str):
+    return RESUME.get('questions').get(question_id)
 
 
 
 # 4. 답변 저장 (질문별 1대1, edit_token 필요)
 @router.post("/questions/{question_id}/answer")
-def save_answer(question_id: str, edit_token: str = Form(...), answer: str = Form(...)):
-    verify_edit_token(edit_token)
-    if 'questions' not in RESUMES[edit_token] or not any(q.get(question_id) for q in RESUMES[edit_token]['questions']):
+def save_answer(question_id: str, answer: str = Form(...)):
+    if 'questions' not in RESUME or not any(q.get(question_id) for q in RESUME['questions']):
         raise HTTPException(status_code=404, detail="존재하지 않는 질문")
-    if 'answers' not in RESUMES[edit_token]:
-        RESUMES[edit_token]['answers'] = {}
-    RESUMES[edit_token]['answers'][question_id] = answer
+    if 'answers' not in RESUME:
+        RESUME['answers'] = {}
+    RESUME['answers'][question_id] = answer
     return {"success": True}
 
