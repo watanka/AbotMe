@@ -1,6 +1,7 @@
 import React, { useCallback, useState } from "react";
 import { Document, Page, pdfjs } from "react-pdf";
 import { useNavigate } from "react-router-dom";
+import ChatBot from "./ChatBot";
 pdfjs.GlobalWorkerOptions.workerSrc = `${process.env.PUBLIC_URL}/pdf.worker.min.js`;
 
 
@@ -91,45 +92,47 @@ export default function ResumeViewer({ pdfUrl }) {
     const pageWidth = Math.min(window.innerWidth - 48, maxWidth);
 
     return (
-        <section className="w-full max-w-2xl mx-auto bg-white rounded-2xl shadow-2xl flex flex-col items-center p-0 sm:p-6 border border-gray-200 relative">
-            {/* Q&A로 이동 버튼 - 우측 상단 고정 */}
-            <button
-                className="absolute top-4 right-4 px-4 py-2 rounded-lg bg-primary text-black font-semibold shadow hover:bg-primary/90 transition"
-                onClick={() => navigate("/resume/qna")}
-                aria-label="Q&A로 이동"
-            >
-                Q&A로 이동
-            </button>
-            <h2 className="text-xl font-semibold tracking-tight text-slate-700 mb-2 mt-4 sm:mt-0">이력서 미리보기</h2>
-            <div className="relative flex flex-col items-center w-full">
-                <div className="flex-1 flex justify-center items-center w-full min-h-[420px]">
-                    <PdfDocument
-                        file={pdfUrl}
-                        pageNumber={pageNumber}
-                        pageWidth={pageWidth}
-                        maxWidth={maxWidth}
-                        minWidth={minWidth}
-                        onLoadSuccess={onDocumentLoadSuccess}
-                        onLoadError={onDocumentLoadError}
-                        loading={<div className="text-gray-400 text-lg font-medium p-8 animate-pulse flex items-center justify-center">PDF 불러오는 중...</div>}
-                        error={<div className="inline-flex items-center rounded-full bg-gray-100 text-gray-800 border border-gray-300 px-3 py-1 text-xs font-semibold shadow-sm select-none">PDF를 불러올 수 없습니다.</div>}
-                    />
+        <>
+            <section className="w-full max-w-3xl mx-auto bg-white rounded-2xl shadow-2xl flex flex-col items-center p-6 border border-gray-200 mt-10">
+                {/* Q&A로 이동 버튼 - 우측 상단 고정 */}
+                <button
+                    className="absolute top-4 right-4 px-4 py-2 rounded-lg bg-primary text-black font-semibold shadow hover:bg-primary/90 transition"
+                    onClick={() => navigate("/resume/qna")}
+                    aria-label="Q&A로 이동"
+                >
+                    Q&A로 이동
+                </button>
+                <h2 className="text-xl font-semibold tracking-tight text-slate-700 mb-2 mt-4 sm:mt-0">이력서 미리보기</h2>
+                <div className="relative flex flex-col items-center w-full">
+                    <div className="flex-1 flex justify-center items-center w-full min-h-[420px]">
+                        <PdfDocument
+                            file={pdfUrl}
+                            pageNumber={pageNumber}
+                            pageWidth={pageWidth}
+                            maxWidth={maxWidth}
+                            minWidth={minWidth}
+                            onLoadSuccess={onDocumentLoadSuccess}
+                            onLoadError={onDocumentLoadError}
+                            loading={<div className="text-gray-400 text-lg font-medium p-8 animate-pulse flex items-center justify-center">PDF 불러오는 중...</div>}
+                            error={<div className="inline-flex items-center rounded-full bg-gray-100 text-gray-800 border border-gray-300 px-3 py-1 text-xs font-semibold shadow-sm select-none">PDF를 불러올 수 없습니다.</div>}
+                        />
+                    </div>
+                    {/* Controls: sticky bottom for mobile UX */}
+                    <div className="sticky bottom-0 left-0 w-full flex flex-col items-center z-10 bg-gradient-to-t from-white via-white/80 to-transparent pt-3 pb-2 mt-2">
+                        <PageNavigation
+                            pageNumber={pageNumber}
+                            numPages={numPages}
+                            onPrev={goToPrevPage}
+                            onNext={goToNextPage}
+                            prevLabel="이전"
+                            nextLabel="다음"
+                        />
+                    </div>
+                    <ErrorBanner message={error} />
                 </div>
-                {/* Controls: sticky bottom for mobile UX */}
-                <div className="sticky bottom-0 left-0 w-full flex flex-col items-center z-10 bg-gradient-to-t from-white via-white/80 to-transparent pt-3 pb-2 mt-2">
-                    <PageNavigation
-                        pageNumber={pageNumber}
-                        numPages={numPages}
-                        onPrev={goToPrevPage}
-                        onNext={goToNextPage}
-                        prevLabel="이전"
-                        nextLabel="다음"
-                    />
-                </div>
-                <ErrorBanner message={error} />
-            </div>
-        </section>
+            </section>
+            {/* 챗봇 위젯: 오른쪽 하단 고정 */}
+            <ChatBot />
+        </>
     );
 }
-
-
