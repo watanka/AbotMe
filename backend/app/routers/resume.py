@@ -27,8 +27,8 @@ def upload_resume(file: UploadFile = File(...), name: str = Form(...), email: st
     # run_resume_pipeline(save_path)
     RESUME = {
         'pdf_path': save_path,
-        'questions': [],
-        'answers': [],
+        'questions': {},
+        'answers': {},
         'name': name,
         'email': email
     }
@@ -66,13 +66,15 @@ def generate_questions():
         {str(uuid.uuid4()): "협업 경험을 구체적으로 설명해주세요."}
     ]
     RESUME['questions'] = questions
-    RESUME['answers'] = {}  # question_id: answer
     return {"questions": questions}
 
 @router.get("/questions/{question_id}")
 def get_question(question_id: str):
     return RESUME.get('questions').get(question_id)
 
+@router.get("/answers/{question_id}")
+def get_answer(question_id: str):
+    return RESUME.get('answers').get(question_id, '')
 
 
 # 4. 답변 저장 (질문별 1대1, edit_token 필요)
@@ -80,8 +82,7 @@ def get_question(question_id: str):
 def save_answer(question_id: str, answer: str = Form(...)):
     if 'questions' not in RESUME or not any(q.get(question_id) for q in RESUME['questions']):
         raise HTTPException(status_code=404, detail="존재하지 않는 질문")
-    if 'answers' not in RESUME:
-        RESUME['answers'] = {}
+    
     RESUME['answers'][question_id] = answer
     return {"success": True}
 
