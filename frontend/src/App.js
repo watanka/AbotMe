@@ -4,9 +4,9 @@ import HomePage from './pages/HomePage';
 
 function App() {
   return (
-    <BrowserRouter>
+    <BrowserRouter basename="/AbotMe">
       <Routes>
-        <Route path="/" element={<HomePage />} />
+        <Route path="" element={<HomePage />} />
       </Routes>
     </BrowserRouter>
   );
