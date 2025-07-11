@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="420" height="220" viewBox="0 0 420 220" xmlns="http://www.w3.org/2000/svg">
+  <rect width="420" height="220" fill="#f8fafc"/>
+  <circle cx="110" cy="110" r="38" fill="#e0e7ef"/>
+  <circle cx="110" cy="110" r="30" fill="#0ea5e9" fill-opacity="0.15"/>
+  <circle cx="110" cy="110" r="20" fill="#0ea5e9" fill-opacity="0.30"/>
+  <text x="170" y="120" font-size="28" font-weight="bold" fill="#334155">이력서 분석 중...</text>
+  <rect x="170" y="140" width="180" height="12" rx="6" fill="#e0e7ef"/>
+  <rect x="170" y="140" width="80" height="12" rx="6" fill="#0ea5e9"/>
+  <text x="260" y="180" text-anchor="middle" font-size="16" fill="#64748b">잠시만 기다려 주세요</text>
+</svg>

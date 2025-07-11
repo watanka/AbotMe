@@ -1,13 +1,14 @@
 import React from 'react';
-import './App.css';
-import ChatArea from './ChatArea';
-import { chatAPI } from './api/service';
+import { BrowserRouter, Route, Routes } from 'react-router-dom';
+import HomePage from './pages/HomePage';
 
 function App() {
   return (
-    <div className="App">
-      <ChatArea chatAPI={chatAPI} />
-    </div>
+    <BrowserRouter>
+      <Routes>
+        <Route path="/" element={<HomePage />} />
+      </Routes>
+    </BrowserRouter>
   );
 }
 

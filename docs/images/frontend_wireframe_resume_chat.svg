@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="1440" height="900" viewBox="0 0 1440 900" xmlns="http://www.w3.org/2000/svg">
+  <!-- 전체 배경 -->
+  <rect width="1440" height="900" fill="#f8fafc"/>
+  <!-- ABOTME 로고 -->
+  <rect x="40" y="32" width="120" height="44" rx="12" fill="#fff" stroke="#e5e7eb" stroke-width="1"/>
+  <text x="100" y="62" text-anchor="middle" font-size="28" font-weight="bold" fill="#222">ABOTME</text>
+
+  <!-- PDF 영역 (웹페이지 가득) -->
+  <rect x="160" y="80" width="900" height="740" rx="18" fill="#fff" stroke="#e5e7eb" stroke-width="2"/>
+
+  <!-- 자기소개 -->
+  <text x="190" y="130" font-size="22" font-weight="bold" fill="#334155">자기소개</text>
+  <text x="190" y="160" font-size="16" fill="#334155">안녕하세요. 5년차 백엔드 개발자 홍길동입니다. Python, FastAPI, MSA에 강점이 있습니다.</text>
+
+  <!-- 프로젝트 1 -->
+  <text x="190" y="210" font-size="18" font-weight="bold" fill="#334155">A 프로젝트</text>
+  <text x="190" y="235" font-size="15" fill="#334155">역할: 관리자</text>
+  <text x="190" y="255" font-size="15" fill="#334155">성과: 3개월 내 서비스 런칭, 월 10만 사용자 확보</text>
+
+  <!-- 프로젝트 2 -->
+  <text x="190" y="300" font-size="18" font-weight="bold" fill="#334155">B 프로젝트</text>
+  <text x="190" y="325" font-size="15" fill="#334155">역할: API 개발</text>
+  <text x="190" y="345" font-size="15" fill="#334155">성과: 결제 시스템 안정화, 장애 0건 유지</text>
+
+  <!-- 프로젝트 3 (하이라이트: 질문 "C 프로젝트에서 맡은 역할은?"에 대한 답변) -->
+  <text x="190" y="390" font-size="18" font-weight="bold" fill="#334155">C 프로젝트</text>
+  <!-- 하이라이트: 역할 -->
+  <rect x="185" y="410" width="350" height="24" rx="6" fill="#fef08a" fill-opacity="0.7" stroke="#fde047" stroke-width="1.5"/>
+  <text x="190" y="428" font-size="15" fill="#a16207">역할: 데이터 파이프라인 구축</text>
+  <!-- 하이라이트: 성과 -->
+  <rect x="185" y="450" width="420" height="24" rx="6" fill="#fef08a" fill-opacity="0.7" stroke="#fde047" stroke-width="1.5"/>
+  <text x="190" y="468" font-size="15" fill="#a16207">성과: 데이터 처리 속도 200% 향상</text>
+
+  <!-- 기타 경험 -->
+  <text x="190" y="520" font-size="18" font-weight="bold" fill="#334155">기타 경험</text>
+  <text x="190" y="545" font-size="15" fill="#334155">- AWS, Docker, CI/CD 자동화 경험 다수</text>
+  <text x="190" y="570" font-size="15" fill="#334155">- 기술 블로그 운영(월 1만 뷰)</text>
+
+  <!-- 챗봇 최소화 버튼 (오른쪽 하단) -->
+  <g>
+    <rect x="1290" y="800" width="120" height="56" rx="28" fill="#334155"/>
+    <text x="1350" y="835" text-anchor="middle" font-size="20" fill="#fff">챗봇 열기</text>
+  </g>
+  <!-- 챗봇 패널 (열렸을 때, 예시) -->
+  <g>
+    <rect x="1040" y="540" width="370" height="330" rx="24" fill="#fff" stroke="#334155" stroke-width="2"/>
+    <text x="1225" y="570" text-anchor="middle" font-size="20" font-weight="bold" fill="#334155">챗봇</text>
+    <rect x="1060" y="590" width="330" height="180" rx="12" fill="#f8fafc" stroke="#e5e7eb" stroke-width="1"/>
+    <text x="1080" y="620" font-size="15" fill="#64748b">사용자: C 프로젝트에서 맡은 역할은?</text>
+    <text x="1080" y="650" font-size="15" fill="#334155">챗봇: 데이터 파이프라인 구축, 성과: 처리 속도 200% 향상</text>
+    <rect x="1060" y="790" width="250" height="36" rx="8" fill="#fff" stroke="#e5e7eb" stroke-width="1"/>
+    <text x="1075" y="815" font-size="15" fill="#64748b">질문 입력...</text>
+    <rect x="1320" y="790" width="60" height="36" rx="8" fill="#334155"/>
+    <text x="1350" y="815" text-anchor="middle" font-size="18" fill="#fff">전송</text>
+    <!-- 닫기 버튼 -->
+    <rect x="1370" y="550" width="28" height="28" rx="14" fill="#f1f5f9" stroke="#cbd5e1" stroke-width="1"/>
+    <text x="1384" y="570" text-anchor="middle" font-size="18" fill="#64748b">×</text>
+  </g>
+</svg>

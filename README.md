@@ -78,3 +78,9 @@ graph TD
 
 ---
 문의 및 피드백: [Issues](https://github.com/your-repo/AbotMe/issues)
+
+## TODO
+- [ ] 이력서 업로드 시, 위치 라벨링 및 벡터 스토어 저장
+- [ ] QNA 질문 생성
+    - [ ] celery 비동기로 구성
+- [ ] 답변 시, 벡터 스토어에 넘기기
