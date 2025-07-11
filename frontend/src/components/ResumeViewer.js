@@ -65,6 +65,8 @@ function ErrorBanner({ message }) {
 
 // ResumeViewer 컨테이너
 export default function ResumeViewer({ pdfUrl }) {
+    // Ensure PDF URL is properly prefixed with PUBLIC_URL
+    const resolvedPdfUrl = `${process.env.PUBLIC_URL}/${pdfUrl}`;
     // 상수 및 상태
     const maxWidth = PAGE_MAX_WIDTH;
     const minWidth = PAGE_MIN_WIDTH;
@@ -104,7 +106,7 @@ export default function ResumeViewer({ pdfUrl }) {
                 <div className="relative flex flex-col items-center w-full">
                     <div className="flex-1 flex justify-center items-center w-full min-h-[420px]">
                         <PdfDocument
-                            file={pdfUrl}
+                            file={resolvedPdfUrl}
                             pageNumber={pageNumber}
                             pageWidth={pageWidth}
                             maxWidth={maxWidth}
