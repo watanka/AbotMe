@@ -2,10 +2,10 @@
 
 ## 1. URL 종류
 
-- **관리자 전용 URL**: `/resume/:id?edit_token=xxxx`
+- **관리자 전용 URL**: `/resume/?edit_token=xxxx`
   - 이력서 업로드, 변경, 질문 생성/답변 등 모든 기능 사용 가능
   - 반드시 로컬/내부망 등 안전한 환경에서만 사용하세요
-- **공개 URL**: `/resume/:id`
+- **공개 URL**: `/resume/`
   - 이력서 PDF와 챗봇만 조회 가능
   - 외부(채용담당자 등)에는 반드시 이 URL만 배포하세요
 
