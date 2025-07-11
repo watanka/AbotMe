@@ -2,6 +2,7 @@
     "name": "frontend",
     "version": "1.0.0",
     "private": true,
+    "homepage": "https://watanka.github.io/AbotMe/",
     "dependencies": {
         "@testing-library/jest-dom": "^6.6.3",
         "@testing-library/react": "^14.0.0",
@@ -27,6 +28,8 @@
     "scripts": {
         "start": "craco start",
         "build": "craco build",
+        "predeploy": "npm run build",
+        "deploy": "gh-pages -d build",
         "test": "craco test --passWithNoTests",
         "lint": "eslint src --ext .js,.jsx"
     },
