@@ -1,6 +1,5 @@
 import React, { useCallback, useState } from "react";
 import { Document, Page, pdfjs } from "react-pdf";
-import { useNavigate } from "react-router-dom";
 import ChatBot from "./ChatBot";
 pdfjs.GlobalWorkerOptions.workerSrc = `${process.env.PUBLIC_URL}/pdf.worker.min.js`;
 
@@ -66,7 +65,6 @@ function ErrorBanner({ message }) {
 
 // ResumeViewer 컨테이너
 export default function ResumeViewer({ pdfUrl }) {
-    const navigate = useNavigate();
     // 상수 및 상태
     const maxWidth = PAGE_MAX_WIDTH;
     const minWidth = PAGE_MIN_WIDTH;
@@ -95,13 +93,13 @@ export default function ResumeViewer({ pdfUrl }) {
         <>
             <section className="w-full max-w-3xl mx-auto bg-white rounded-2xl shadow-2xl flex flex-col items-center p-6 border border-gray-200 mt-10">
                 {/* Q&A로 이동 버튼 - 우측 상단 고정 */}
-                <button
+                {/* <button
                     className="absolute top-4 right-4 px-4 py-2 rounded-lg bg-primary text-black font-semibold shadow hover:bg-primary/90 transition"
                     onClick={() => navigate("/resume/qna")}
                     aria-label="Q&A로 이동"
                 >
                     Q&A로 이동
-                </button>
+                </button> */}
                 <h2 className="text-xl font-semibold tracking-tight text-slate-700 mb-2 mt-4 sm:mt-0">이력서 미리보기</h2>
                 <div className="relative flex flex-col items-center w-full">
                     <div className="flex-1 flex justify-center items-center w-full min-h-[420px]">

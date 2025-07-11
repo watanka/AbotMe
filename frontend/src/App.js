@@ -1,15 +1,12 @@
 import React from 'react';
-import './App.css';
-import { BrowserRouter, Routes, Route } from 'react-router-dom';
-import ResumeFlowContainer from './components/ResumeFlowContainer';
-import ResumeQnA from './components/ResumeQnA';
+import { BrowserRouter, Route, Routes } from 'react-router-dom';
+import HomePage from './pages/HomePage';
 
 function App() {
   return (
     <BrowserRouter>
       <Routes>
-        <Route path="/" element={<ResumeFlowContainer />} />
-        <Route path="/resume/qna" element={<ResumeQnA />} />
+        <Route path="/" element={<HomePage />} />
       </Routes>
     </BrowserRouter>
   );
