@@ -45,7 +45,6 @@ def upload_resume(
 # 2. 이력서/질문/답변 데이터 조회 (공개)
 @router.get("/")
 def get_resume():
-    global RESUME
     if not RESUME:
         raise HTTPException(status_code=404, detail="존재하지 않는 이력서")
 
