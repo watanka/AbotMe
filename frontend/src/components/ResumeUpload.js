@@ -1,4 +1,5 @@
 import React, { useRef, useState } from "react";
+import { resumeAPI } from "../api/service";
 
 function UploadField({ label, type = "text", value, onChange, placeholder, required, disabled }) {
   return (
@@ -117,6 +118,8 @@ function SuccessResult({ editToken, publicUrl }) {
   );
 }
 
+
+
 export default function ResumeUpload({ onUploadSuccess }) {
   const [file, setFile] = useState(null);
   const [name, setName] = useState("");
@@ -137,12 +140,7 @@ export default function ResumeUpload({ onUploadSuccess }) {
       formData.append("file", file);
       formData.append("name", name);
       formData.append("email", email);
-      const res = await fetch("http://localhost:8000/resume", {
-        method: "POST",
-        body: formData,
-      });
-      if (!res.ok) throw new Error("업로드 실패 (" + res.status + ")");
-      const data = await res.json();
+      const data = await resumeAPI.upload(formData);
       setSuccess(data);
       if (onUploadSuccess) onUploadSuccess(data);
     } catch (err) {

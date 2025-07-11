@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { resumeAPI } from '../api/service';
 
 export default function ResumeQnA() {
     const [questions, setQuestions] = useState([]);
@@ -12,9 +13,7 @@ export default function ResumeQnA() {
             setLoading(true);
             setError(null);
             try {
-                const res = await fetch("http://localhost:8000/resume/generate-questions", {
-                    method: "POST"
-                });
+                const res = await resumeAPI.generateQuestions();
                 if (!res.ok) throw new Error("질문을 받아오지 못했습니다.");
                 const data = await res.json();
                 setQuestions(data.questions || []);
@@ -24,7 +23,7 @@ export default function ResumeQnA() {
                         data.questions.map(async (q) => {
                             const [id] = Object.entries(q)[0];
                             try {
-                                const res = await fetch(`http://localhost:8000/resume/answers/${id}`);
+                                const res = await resumeAPI.getAnswer(id);
                                 if (!res.ok) throw new Error();
                                 const answer = await res.text();
                                 return [id, { value: answer || "", original: answer || "" }];
@@ -84,15 +83,11 @@ export default function ResumeQnA() {
                                             disabled={!changed}
                                             onClick={async () => {
                                                 try {
-                                                    const res = await fetch(`http://localhost:8000/resume/questions/${id}/answer`, {
-                                                        method: "POST",
-                                                        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-                                                        body: new URLSearchParams({ answer: value })
-                                                    });
+                                                    const res = await resumeAPI.saveAnswer(id, value);
                                                     if (!res.ok) throw new Error("제출에 실패했습니다");
                                                     setAnswers(a => ({ ...a, [id]: { value, original: value } }));
                                                 } catch (e) {
-                                                    alert(e.message || "서버 오류");
+                                                    setError(e.message);
                                                 }
                                             }}
                                         >
