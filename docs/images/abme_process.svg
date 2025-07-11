@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="1200" height="420" viewBox="0 0 1200 420" xmlns="http://www.w3.org/2000/svg">
+  <rect width="1200" height="420" fill="#f8fafc"/>
+  <!-- Upload 단계 -->
+  <rect x="80" y="110" width="300" height="200" rx="28" fill="#fff" stroke="#0ea5e9" stroke-width="2.5"/>
+  <text x="230" y="160" text-anchor="middle" font-size="28" font-weight="bold" fill="#0ea5e9">이력서 업로드</text>
+  <text x="230" y="195" text-anchor="middle" font-size="16" fill="#64748b">PDF drag & drop</text>
+  <text x="230" y="225" text-anchor="middle" font-size="16" fill="#64748b">이름/이메일 입력</text>
+
+  <!-- 화살표1 -->
+  <g>
+    <line x1="380" y1="210" x2="470" y2="210" stroke="#334155" stroke-width="4" marker-end="url(#arrowhead)"/>
+  </g>
+
+  <!-- Question 단계 -->
+  <rect x="470" y="110" width="300" height="200" rx="28" fill="#fff" stroke="#334155" stroke-width="2.5"/>
+  <text x="620" y="160" text-anchor="middle" font-size="28" font-weight="bold" fill="#334155">질문 생성/답변</text>
+  <text x="620" y="195" text-anchor="middle" font-size="16" fill="#64748b">LLM 기반 자동 질문 생성</text>
+  <text x="620" y="225" text-anchor="middle" font-size="16" fill="#64748b">질문별 답변/저장</text>
+
+  <!-- 화살표2 -->
+  <g>
+    <line x1="770" y1="210" x2="860" y2="210" stroke="#334155" stroke-width="4" marker-end="url(#arrowhead)"/>
+  </g>
+
+  <!-- Resume+Chat 단계 -->
+  <rect x="860" y="110" width="300" height="200" rx="28" fill="#fff" stroke="#334155" stroke-width="2.5"/>
+  <text x="1010" y="160" text-anchor="middle" font-size="28" font-weight="bold" fill="#334155">이력서 보기 & 챗봇</text>
+  <text x="1010" y="195" text-anchor="middle" font-size="16" fill="#64748b">PDF 이력서 전체 렌더링</text>
+  <rect x="920" y="215" width="180" height="28" rx="6" fill="#fef08a" fill-opacity="0.7" stroke="#fde047" stroke-width="1.5"/>
+  <text x="1010" y="235" text-anchor="middle" font-size="16" fill="#a16207">질문 관련 부분 하이라이트</text>
+  <rect x="1100" y="265" width="40" height="40" rx="20" fill="#334155"/>
+  <text x="1120" y="292" text-anchor="middle" font-size="18" fill="#fff">챗봇</text>
+
+  <!-- 화살표 마커 정의 -->
+  <defs>
+    <marker id="arrowhead" markerWidth="16" markerHeight="16" refX="12" refY="8" orient="auto" markerUnits="strokeWidth">
+      <polygon points="2,2 14,8 2,14" fill="#334155"/>
+    </marker>
+  </defs>
+</svg>
