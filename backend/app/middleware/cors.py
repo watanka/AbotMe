@@ -1,7 +1,6 @@
 import os
 
 from dotenv import load_dotenv
-from fastapi import Request
 from fastapi.middleware.cors import CORSMiddleware
 
 
