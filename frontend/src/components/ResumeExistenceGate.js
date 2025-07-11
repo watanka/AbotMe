@@ -1,4 +1,5 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState } from 'react';
+import { resumeAPI } from '../api/service';
 
 /**
  * ResumeExistenceGate (render prop 패턴)
@@ -13,17 +14,20 @@ export default function ResumeExistenceGate({ children, fallback }) {
     const [pdfUrl, setPdfUrl] = useState(null);
 
     useEffect(() => {
-        const url = "http://localhost:8000/resume"; // 실제 PDF API 엔드포인트로 교체
-        fetch(url)
-            .then(async res => {
-                if (res.status === 404) setStatus("notfound");
-                else if (res.ok) {
-                    const data = await res.json();
+        async function checkResume() {
+            try {
+                const data = await resumeAPI.getResume();
+                if (!data.pdf_url) {
+                    setStatus("notfound");
+                } else {
                     setStatus("exists");
                     setPdfUrl(data.pdf_url);
-                } else setStatus("error");
-            })
-            .catch(() => setStatus("error"));
+                }
+            } catch (error) {
+                setStatus("error");
+            }
+        }
+        checkResume();
     }, []);
 
     if (status === "loading") return <div className="text-gray-400 mt-16">이력서 확인 중...</div>;
