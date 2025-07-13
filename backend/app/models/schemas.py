@@ -20,3 +20,10 @@ class FAQ(BaseModel):
 class HistoryItem(BaseModel):
     role: Literal["user", "bot"]
     message: str
+
+
+class TokenVerifyRequest(BaseModel):
+    token: str
+
+class TokenVerifyResponse(BaseModel):
+    success: bool

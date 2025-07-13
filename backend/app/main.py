@@ -1,7 +1,7 @@
 from fastapi import FastAPI
 
 from app.middleware.cors import setup_cors
-from app.routers import chat, faq, history, vector_store, resume
+from app.routers import chat, faq, history, vector_store, resume, token
 
 
 def create_app():
@@ -16,6 +16,7 @@ def create_app():
         vector_store.router, prefix="/vector-store", tags=["vector-store"]
     )
     app.include_router(resume.router, prefix="/resume", tags=["resume"])
+    app.include_router(token.router, prefix="/token", tags=["token"])
 
     @app.get("/")
     def root():
