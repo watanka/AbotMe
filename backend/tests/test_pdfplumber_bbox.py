@@ -1,4 +1,5 @@
 import pdfplumber
+import pytest
 
 @pytest.mark.skip
 def test_pdfplumber_bbox_all(sample_pdf_paths):
