@@ -10,6 +10,7 @@ from langchain_openai import ChatOpenAI
 
 from backend.app.services.data_service import run_resume_pipeline
 
+
 @pytest.mark.skip
 def test_resume_e2e_vectorstore_qa(sample_pdf_paths):
     """

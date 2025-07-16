@@ -7,6 +7,7 @@ from app.data_pipeline.extract import PDFResumeMetadataExtractor
 from app.data_pipeline.prompts import resume_prompt
 from langchain_openai import ChatOpenAI
 
+
 @pytest.mark.skip
 def test_resume_extractor_and_agentic_metadata_chunker_to_csv(sample_pdf_paths):
     extractor = PDFResumeMetadataExtractor()
