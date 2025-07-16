@@ -10,7 +10,7 @@ export default function HomePage() {
   const [isAdmin, setIsAdmin] = useState(false);
   const [showAdminModal, setShowAdminModal] = useState(false);
   const [adminPage, setAdminPage] = useState('home'); // 'home' | 'upload' | 'qna'
-
+  const [highlights, setHighlights] = useState([]);
   const handleAdminLogin = (token) => {
     if (token && token.length > 0) setIsAdmin(true);
     setShowAdminModal(false);
@@ -34,8 +34,8 @@ export default function HomePage() {
         }>
           {pdfUrl => (
             <>
-              <ResumeViewer pdfUrl={pdfUrl} />
-              <ChatBot />
+              <ResumeViewer pdfUrl={pdfUrl} highlights={highlights} />
+              <ChatBot onMetadata={setHighlights} />
             </>
           )}
         </ResumeExistenceGate>
