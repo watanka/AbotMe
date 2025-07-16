@@ -122,8 +122,8 @@ function SuccessResult({ editToken, publicUrl }) {
 
 export default function ResumeUpload({ onUploadSuccess }) {
   const [file, setFile] = useState(null);
-  const [name, setName] = useState("");
-  const [email, setEmail] = useState("");
+  const [name, setName] = useState("eunsung"); // TODO: 임시 설정
+  const [email, setEmail] = useState("eunsung@naver.com"); // TODO: 임시 설정
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const [success, setSuccess] = useState(null); // { edit_token, public_url }
