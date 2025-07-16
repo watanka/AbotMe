@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { tokenAPI } from '../api/service';
 
 export default function AdminLoginModal({ onSubmit, onClose }) {
-    const [token, setToken] = useState('');
+    const [token, setToken] = useState('SECRET_TOKEN');
     const [error, setError] = useState('');
     const [loading, setLoading] = useState(false);
 
