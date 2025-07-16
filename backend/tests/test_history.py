@@ -1,10 +1,11 @@
 from app.main import create_app
 from fastapi.testclient import TestClient
-from app.dependencies import get_llm_client, get_vector_store, get_rag_engine
+from app.dependencies import get_llm_client, get_user_message_handler, get_vector_store, get_rag_engine
 from tests.utils.mocks import (
     get_mock_rag_engine,
     get_mock_vector_store,
     get_mock_llm_client,
+    get_mock_user_message_handler,
 )
 
 app = create_app()
@@ -17,7 +18,7 @@ def test_history_accumulation():
     app.dependency_overrides[get_rag_engine] = get_mock_rag_engine
     app.dependency_overrides[get_vector_store] = get_mock_vector_store
     app.dependency_overrides[get_llm_client] = get_mock_llm_client
-
+    app.dependency_overrides[get_user_message_handler] = get_mock_user_message_handler
     # 1. 첫 메시지 전송
     data1 = {"message": "안녕!", "session_id": SESSION_ID}
     client.post("/chat/", json=data1)
