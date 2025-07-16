@@ -17,7 +17,6 @@ export default function AdminLoginModal({ onSubmit, onClose }) {
             setError('토큰이 일치하지 않습니다.');
         }
     };
-
     return (
         <div className="modal fixed inset-0 flex items-center justify-center bg-black bg-opacity-40 z-50">
             <div className="bg-white rounded-xl p-6 shadow-xl min-w-[300px]">
