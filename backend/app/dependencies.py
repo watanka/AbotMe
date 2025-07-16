@@ -4,13 +4,26 @@ from fastapi import Depends
 from app.llm.llm_client.langchain_gemini import LangChainGeminiClient
 from app.llm.vector_store import VectorStore
 from app.llm.llm_client import LLMClient
+from app.llm.llm_client.langchain_deepseek import LangChainDeepseekClient
 from app.llm.rag_engine import RAGEngine
 from app.llm.vector_store.chroma import ChromaVectorStore
 from app.llm.vector_store.embedding import GeminiEmbeddingModel
-
+from dotenv import load_dotenv
+from langchain_openai import ChatOpenAI
 
 load_dotenv()
 vector_store_dir = os.getenv("VECTOR_STORE_DIR", "./vector-db")
+
+
+def get_llm():
+    llm = ChatOpenAI(
+        openai_api_key=os.getenv("OPENROUTER_API_KEY"),
+        openai_api_base=os.getenv("OPENROUTER_BASE_URL"),
+        model_name="deepseek/deepseek-chat:free",
+    )
+
+    # llm = LangChainGeminiClient().llm
+    return llm
 
 
 def get_vector_store() -> VectorStore:
