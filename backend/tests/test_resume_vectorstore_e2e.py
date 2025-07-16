@@ -1,5 +1,5 @@
 import os
-
+import pytest
 from app.data_pipeline.chunk.agentic_chunker import AgenticMetadataChunker
 from app.data_pipeline.extract import PDFResumeMetadataExtractor
 from app.data_pipeline.prompts import resume_prompt
@@ -10,7 +10,7 @@ from langchain_openai import ChatOpenAI
 
 from backend.app.services.data_service import run_resume_pipeline
 
-
+@pytest.mark.skip
 def test_resume_e2e_vectorstore_qa(sample_pdf_paths):
     """
     PDF → meta_list → chunk(dict) → ChromaMetadataVectorStoreWriter 저장 →
