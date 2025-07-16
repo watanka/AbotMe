@@ -1,14 +1,36 @@
-import React, { useCallback, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { Document, Page, pdfjs } from "react-pdf";
-import ChatBot from "./ChatBot";
 pdfjs.GlobalWorkerOptions.workerSrc = `${process.env.PUBLIC_URL}/pdf.worker.min.js`;
 
 
 const PAGE_MAX_WIDTH = 600;
 const PAGE_MIN_WIDTH = 280;
 
+import HighlightOverlay from "./HighlightOverlay";
+
 // PDF 문서 렌더링 컴포넌트
-function PdfDocument({ file, pageNumber, pageWidth, maxWidth, minWidth, onLoadSuccess, onLoadError, loading, error }) {
+function PdfDocument({ file, pageNumber, pageWidth, maxWidth, minWidth, onLoadSuccess, onLoadError, loading, error, highlights }) {
+    const [pdfDims, setPdfDims] = useState({ width: null, height: null });
+    const [pageDims, setPageDims] = useState({ width: null, height: null });
+    const pageContainerRef = useRef();
+
+    // PDF 원본 사이즈 얻기
+    const handlePageLoadSuccess = ({ width, height }) => {
+        setPdfDims({ width, height });
+        // get actual rendered size
+        if (pageContainerRef.current) {
+            const rect = pageContainerRef.current.getBoundingClientRect();
+            setPageDims({ width: rect.width, height: rect.height });
+        }
+    };
+
+    useEffect(() => {
+        if (pageContainerRef.current) {
+            const rect = pageContainerRef.current.getBoundingClientRect();
+            setPageDims({ width: rect.width, height: rect.height });
+        }
+    }, [pageWidth]);
+
     return (
         <Document
             file={file}
@@ -17,18 +39,33 @@ function PdfDocument({ file, pageNumber, pageWidth, maxWidth, minWidth, onLoadSu
             loading={loading}
             error={error}
         >
-            <div className="flex justify-center items-center border border-gray-200 rounded-2xl shadow-2xl bg-white overflow-hidden transition-all p-2 sm:p-4"
-                style={{ maxWidth, minWidth }}>
+            <div
+                ref={pageContainerRef}
+                className="relative flex justify-center items-center border border-gray-200 rounded-2xl shadow-2xl bg-white overflow-hidden transition-all p-2 sm:p-4"
+                style={{ maxWidth, minWidth }}
+            >
                 <Page
                     pageNumber={pageNumber}
                     width={pageWidth}
                     renderAnnotationLayer={false}
                     renderTextLayer={false}
+                    onLoadSuccess={handlePageLoadSuccess}
                 />
+                {/* 하이라이트 오버레이 */}
+                {Array.isArray(highlights) && pdfDims.width && pdfDims.height && pageDims.width && pageDims.height && (
+                    <HighlightOverlay
+                        highlights={highlights}
+                        pageWidth={pageDims.width}
+                        pageHeight={pageDims.height}
+                        pdfWidth={pdfDims.width}
+                        pdfHeight={pdfDims.height}
+                    />
+                )}
             </div>
         </Document>
     );
 }
+
 
 // 페이지 네비게이션 컴포넌트
 function PageNavigation({ pageNumber, numPages, onPrev, onNext, prevLabel = "이전", nextLabel = "다음", className = "" }) {
@@ -64,7 +101,7 @@ function ErrorBanner({ message }) {
 }
 
 // ResumeViewer 컨테이너
-export default function ResumeViewer({ pdfUrl }) {
+export default function ResumeViewer({ pdfUrl, highlights }) {
     // Ensure PDF URL is properly prefixed with PUBLIC_URL
     const resolvedPdfUrl = `${process.env.PUBLIC_URL}/${pdfUrl}`;
     // 상수 및 상태
@@ -73,6 +110,19 @@ export default function ResumeViewer({ pdfUrl }) {
     const [numPages, setNumPages] = useState(null);
     const [pageNumber, setPageNumber] = useState(1);
     const [error, setError] = useState(null);
+
+    // 가장 앞의 page_id로 자동 이동
+    useEffect(() => {
+        if (Array.isArray(highlights) && highlights.length > 0) {
+            const pageIds = highlights
+                .map(h => h.page_id)
+                .filter(pid => typeof pid === "number" && !isNaN(pid));
+            if (pageIds.length > 0) {
+                const minPage = Math.min(...pageIds);
+                setPageNumber(minPage);
+            }
+        }
+    }, [highlights]);
 
     // PDF 로드 성공/실패 핸들러
     const onDocumentLoadSuccess = useCallback(({ numPages }) => {
@@ -91,17 +141,15 @@ export default function ResumeViewer({ pdfUrl }) {
     // 반응형 페이지 너비
     const pageWidth = Math.min(window.innerWidth - 48, maxWidth);
 
+    // 현재 페이지의 하이라이트만 추출
+    const pageHighlights = useMemo(() => {
+        if (!Array.isArray(highlights)) return [];
+        return highlights.filter(h => h.page_id === pageNumber && h.x0 && h.x1 && h.top && h.bottom);
+    }, [highlights, pageNumber]);
+
     return (
         <>
             <section className="w-full max-w-3xl mx-auto bg-white rounded-2xl shadow-2xl flex flex-col items-center p-6 border border-gray-200 mt-10">
-                {/* Q&A로 이동 버튼 - 우측 상단 고정 */}
-                {/* <button
-                    className="absolute top-4 right-4 px-4 py-2 rounded-lg bg-primary text-black font-semibold shadow hover:bg-primary/90 transition"
-                    onClick={() => navigate("/resume/qna")}
-                    aria-label="Q&A로 이동"
-                >
-                    Q&A로 이동
-                </button> */}
                 <h2 className="text-xl font-semibold tracking-tight text-slate-700 mb-2 mt-4 sm:mt-0">이력서 미리보기</h2>
                 <div className="relative flex flex-col items-center w-full">
                     <div className="flex-1 flex justify-center items-center w-full min-h-[420px]">
@@ -115,9 +163,9 @@ export default function ResumeViewer({ pdfUrl }) {
                             onLoadError={onDocumentLoadError}
                             loading={<div className="text-gray-400 text-lg font-medium p-8 animate-pulse flex items-center justify-center">PDF 불러오는 중...</div>}
                             error={<div className="inline-flex items-center rounded-full bg-gray-100 text-gray-800 border border-gray-300 px-3 py-1 text-xs font-semibold shadow-sm select-none">PDF를 불러올 수 없습니다.</div>}
+                            highlights={pageHighlights}
                         />
                     </div>
-                    {/* Controls: sticky bottom for mobile UX */}
                     <div className="sticky bottom-0 left-0 w-full flex flex-col items-center z-10 bg-gradient-to-t from-white via-white/80 to-transparent pt-3 pb-2 mt-2">
                         <PageNavigation
                             pageNumber={pageNumber}
@@ -131,8 +179,6 @@ export default function ResumeViewer({ pdfUrl }) {
                     <ErrorBanner message={error} />
                 </div>
             </section>
-            {/* 챗봇 위젯: 오른쪽 하단 고정 */}
-            <ChatBot />
         </>
     );
 }

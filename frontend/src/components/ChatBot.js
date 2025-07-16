@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from "react";
 
-export default function ChatBot() {
+export default function ChatBot({ onMetadata }) {
   const [open, setOpen] = useState(false);
   const [messages, setMessages] = useState([
     { role: "bot", content: "안녕하세요! 궁금한 점을 물어보세요." }
@@ -74,26 +74,47 @@ export default function ChatBot() {
       const decoder = new TextDecoder("utf-8");
       let done = false;
 
+      let metadata = null;
       while (!done) {
         const { value, done: doneReading } = await reader.read();
         done = doneReading;
         if (value) {
-          const chunk = decoder.decode(value);
-          botMsg.content += chunk;
-          setMessages(prev => {
-            const updated = [...prev];
-            updated[updated.length - 1] = { ...botMsg };
-            return updated;
-          });
+          const line = decoder.decode(value).trim();
+          if (!line) continue;
+          let parsed;
+          try {
+            parsed = JSON.parse(line);
+          } catch (e) {
+            continue;
+          }
+          if (parsed.type === "chunk") {
+            botMsg.content += parsed.data;
+            setMessages(prev => {
+              const updated = [...prev];
+              updated[updated.length - 1] = { ...botMsg };
+              return updated;
+            });
+          } else if (parsed.type === "metadata" && metadata === null) {
+            metadata = parsed.data;
+            if (onMetadata) onMetadata(metadata);
+          } else if (parsed.type === "error") {
+            setMessages(prev => [
+              ...prev.slice(0, -1),
+              { role: "bot", content: parsed.data || "서버 오류" }
+            ]);
+          }
         }
       }
-      // TODO: highlights 등 추가 파싱 필요시 여기서 처리
+      if (metadata) {
+        console.log("[메타데이터]", metadata);
+      }
     } catch (e) {
       setMessages(prev => [
         ...prev.slice(0, -1),
         { role: "bot", content: e.message || "서버 오류" }
       ]);
     } finally {
+
       setLoading(false);
     }
   };
