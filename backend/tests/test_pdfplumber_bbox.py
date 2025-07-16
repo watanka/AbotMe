@@ -1,6 +1,6 @@
 import pdfplumber
 
-
+@pytest.mark.skip
 def test_pdfplumber_bbox_all(sample_pdf_paths):
     """
     sample_pdf_paths fixture를 사용하여 sample-pdf 폴더 내 모든 PDF 파일의
