@@ -1,6 +1,11 @@
 from app.main import create_app
 from fastapi.testclient import TestClient
-from app.dependencies import get_llm_client, get_user_message_handler, get_vector_store, get_rag_engine
+from app.dependencies import (
+    get_llm_client,
+    get_user_message_handler,
+    get_vector_store,
+    get_rag_engine,
+)
 from tests.utils.mocks import (
     get_mock_llm_client,
     get_mock_vector_store,
@@ -20,16 +25,18 @@ def test_chat_streaming():
     app.dependency_overrides[get_llm_client] = get_mock_llm_client
     app.dependency_overrides[get_user_message_handler] = get_mock_user_message_handler
     import re
+
     data = {"message": "스트리밍 테스트", "session_id": "stream-session"}
     with client.stream("POST", "/chat/", json=data) as response:
         assert response.status_code == 200
         chunk_text = ""
         metadata_obj = None
         buffer = ""
+
         def extract_json_objects(buf):
             objs = []
             last_end = 0
-            for match in re.finditer(r'({.*?})(?={|$)', buf):
+            for match in re.finditer(r"({.*?})(?={|$)", buf):
                 try:
                     obj = json.loads(match.group(1))
                     objs.append((obj, match.end()))
@@ -53,6 +60,5 @@ def test_chat_streaming():
         assert "MOCK LLM RESPONSE" in chunk_text
         # assert metadata_obj is not None
         # assert metadata_obj and "page_id" in metadata_obj[0]
-
 
     app.dependency_overrides = {}
