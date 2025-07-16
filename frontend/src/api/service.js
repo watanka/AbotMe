@@ -104,4 +104,16 @@ export const resumeAPI = {
         }
     }
 };
-    
+
+// Token API
+export const tokenAPI = {
+    verify: async (token) => {
+        try {
+            const response = await axios.post(`${API_URL}/token/verify`, { token });
+            return response.data;
+        } catch (error) {
+            console.error('Token verify error:', error);
+            return false;
+        }
+    }
+};
