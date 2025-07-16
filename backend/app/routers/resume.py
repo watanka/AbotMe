@@ -1,10 +1,9 @@
-from fastapi import APIRouter, UploadFile, File, Form, HTTPException
+from fastapi import APIRouter, Depends, UploadFile, File, Form, HTTPException
 import uuid
 
 # 기존 서비스 함수 재사용
 from app.services.data_service import run_resume_pipeline
-
-# from app.llm.rag_engine import ... # 필요시 추가
+from app.dependencies import get_llm
 
 router = APIRouter()
 
@@ -21,7 +20,7 @@ def verify_edit_token(edit_token: str):
 # 1. 이력서 업로드 (최초 등록)
 @router.post("/")
 def upload_resume(
-    file: UploadFile = File(...), name: str = Form(...), email: str = Form(...)
+    file: UploadFile = File(...), name: str = Form(...), email: str = Form(...), llm = Depends(get_llm)
 ):
     global RESUME
     # 실제 구현 시: 파일 저장, id/토큰 생성, DB 저장 등
@@ -39,6 +38,7 @@ def upload_resume(
         "email": email,
     }
     public_url = f"/{name}_{file.filename}"
+    run_resume_pipeline(llm, save_path)
     return {"public_url": public_url}
 
 

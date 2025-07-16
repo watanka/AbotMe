@@ -1,14 +1,15 @@
 import os
-from dotenv import load_dotenv
-from fastapi import Depends
-from app.llm.llm_client.langchain_gemini import LangChainGeminiClient
-from app.llm.vector_store import VectorStore
+
+from app.data_pipeline.prompts import user_query_prompt
 from app.llm.llm_client import LLMClient
 from app.llm.llm_client.langchain_deepseek import LangChainDeepseekClient
 from app.llm.rag_engine import RAGEngine
+from app.llm.user_message_handler import UserMessageHandler
+from app.llm.vector_store import VectorStore
 from app.llm.vector_store.chroma import ChromaVectorStore
 from app.llm.vector_store.embedding import GeminiEmbeddingModel
 from dotenv import load_dotenv
+from fastapi import Depends
 from langchain_openai import ChatOpenAI
 
 load_dotenv()
@@ -32,7 +33,7 @@ def get_vector_store() -> VectorStore:
 
 
 def get_llm_client() -> LLMClient:
-    return LangChainGeminiClient()
+    return LangChainDeepseekClient()
 
 
 def get_rag_engine(
@@ -40,3 +41,9 @@ def get_rag_engine(
     llm_client: LLMClient = Depends(get_llm_client),
 ) -> RAGEngine:
     return RAGEngine(vector_store, llm_client)
+
+
+def get_user_message_handler(
+    llm_client: LLMClient = Depends(get_llm),
+) -> UserMessageHandler:
+    return UserMessageHandler(llm_client, user_query_prompt)
