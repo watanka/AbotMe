@@ -22,9 +22,7 @@ class RAGEngine:
     def retrieve_context(self, msg: dict, k: int = 5):
         return self.vector_store.query_with_metadata(msg, k=k)
 
-    def generate_answer(
-        self, msg: str, context, callback: Optional[Callable] = None
-    ):
+    def generate_answer(self, msg: str, context, callback: Optional[Callable] = None):
         prompt = f"""
 당신은 이력서를 보고 질문하는 사용자들에게 답변을 해줘야해요. 아래는 사용자의 질문과 참고할 정보입니다. 이 참고 정보는 벡터스토어에서 꺼내온 거예요.
 사용자들은 당신이 이력서에 대한 모든 정보를 다 알고 있다고 가정해요. 그러니까 사용자에게 이력서 정보를 알려주는 역할이예요. 다음 참고 정보를 기반으로 사용자에게 정보를 알려주세요. 

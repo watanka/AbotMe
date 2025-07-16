@@ -20,7 +20,10 @@ def verify_edit_token(edit_token: str):
 # 1. 이력서 업로드 (최초 등록)
 @router.post("/")
 def upload_resume(
-    file: UploadFile = File(...), name: str = Form(...), email: str = Form(...), llm = Depends(get_llm)
+    file: UploadFile = File(...),
+    name: str = Form(...),
+    email: str = Form(...),
+    llm=Depends(get_llm),
 ):
     global RESUME
     # 실제 구현 시: 파일 저장, id/토큰 생성, DB 저장 등

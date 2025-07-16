@@ -29,13 +29,16 @@ class ChromaMetadataVectorStoreWriter(VectorStoreWriter):
             label_id = doc.get("label_id", "")
             self.vector_store.add_documents(
                 documents=[doc.get("chunk_text", "")],
-                metadatas=[{
-                    "tags": tags, 
-                    "name": name, 
-                    "x0": x0, 
-                    "top": top, 
-                    "x1": x1, 
-                    "bottom": bottom, 
-                    "page_id": doc.get("page_id")}],
+                metadatas=[
+                    {
+                        "tags": tags,
+                        "name": name,
+                        "x0": x0,
+                        "top": top,
+                        "x1": x1,
+                        "bottom": bottom,
+                        "page_id": doc.get("page_id"),
+                    }
+                ],
                 ids=[f"resume-{label_id}"],
             )

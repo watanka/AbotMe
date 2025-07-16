@@ -28,9 +28,7 @@ class ChromaVectorStore(VectorStore):
 
     def query_with_metadata(self, msg: dict, k: int = 5) -> List[Any]:
         filter_dict = self._metadata_filter(msg.additional_kwargs)
-        return self.db.similarity_search(
-            query=msg.content, k=k, filter=filter_dict
-        )
+        return self.db.similarity_search(query=msg.content, k=k, filter=filter_dict)
 
     def _metadata_filter(self, metadata: dict) -> dict:
         tags = metadata.get("tags", [])
@@ -40,5 +38,7 @@ class ChromaVectorStore(VectorStore):
             filters.append({"tags": {"$in": tags}})
         if name:
             filters.append({"name": name})
-        filter_dict = {"$or": filters} if len(filters) > 1 else (filters[0] if filters else None)
+        filter_dict = (
+            {"$or": filters} if len(filters) > 1 else (filters[0] if filters else None)
+        )
         return filter_dict

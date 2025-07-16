@@ -5,4 +5,6 @@ from langfuse import get_client
 load_dotenv()
 langfuse = get_client()
 
-resume_prompt = ChatPromptTemplate.from_template(langfuse.get_prompt("resume-chunker").get_langchain_prompt())
+resume_prompt = ChatPromptTemplate.from_template(
+    langfuse.get_prompt("resume-chunker").get_langchain_prompt()
+)

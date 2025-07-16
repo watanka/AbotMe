@@ -54,7 +54,12 @@ def stream_chat_response(
 
             # metadata 정보 기반 분기: 사용자 답변 and PDF 하이라이트
             context_docs_metadata = rag_engine.retrieve_context(user_message_metadata)
-            context = "\n".join([getattr(doc, "page_content", str(doc)) for doc in context_docs_metadata])
+            context = "\n".join(
+                [
+                    getattr(doc, "page_content", str(doc))
+                    for doc in context_docs_metadata
+                ]
+            )
             metadata = [doc.metadata for doc in context_docs_metadata]
             for chunk in rag_engine.generate_answer(
                 user_message, context, callback=langfuse_callback_handler
@@ -66,7 +71,9 @@ def stream_chat_response(
             import traceback
 
             traceback.print_exc()
-            yield json.dumps({"type": "error", "data": f"[ERROR: LLM 호출 실패] {str(e)}"})
+            yield json.dumps(
+                {"type": "error", "data": f"[ERROR: LLM 호출 실패] {str(e)}"}
+            )
         if request.session_id:
             # 비동기 호출
             add_history(
