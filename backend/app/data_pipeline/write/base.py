@@ -1,6 +1,7 @@
 from abc import ABC, abstractmethod
 from typing import List
 
+
 class VectorStoreWriter(ABC):
     @abstractmethod
     def save(self, docs: List[dict]):
