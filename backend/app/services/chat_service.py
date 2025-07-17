@@ -1,11 +1,11 @@
+import json
+
 from app.llm.rag_engine import RAGEngine
 from app.llm.user_message_handler import UserMessageHandler
 from app.models.schemas import ChatRequest, ChatResponse, HistoryItem
 from app.services.history_service import add_history
 from fastapi.responses import StreamingResponse
 from langfuse.langchain import CallbackHandler
-import json
-
 
 langfuse_callback_handler = CallbackHandler()
 
