@@ -60,7 +60,7 @@ export default function ResumeQnA() {
                             const value = answers[qid] || "";
                             return (
                                 <li key={qid} className="p-4 rounded-lg bg-gray-50 border border-gray-200 shadow flex flex-col gap-2">
-                                    <span className="font-semibold text-gray-700">Q{idx + 1}.</span> {q.question_text}
+                                    <span className="font-semibold text-gray-700">Q{idx + 1}.</span> {q.question}
                                     <textarea
                                         className="mt-2 w-full min-h-[60px] border rounded p-2 text-base focus:ring-2 focus:ring-primary/40"
                                         placeholder="답변을 입력하세요"

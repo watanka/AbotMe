@@ -1,9 +1,11 @@
-from fastapi import APIRouter, Depends, UploadFile, File, Form, HTTPException
 import uuid
+
+from app.dependencies import get_llm, get_qna_service
 
 # 기존 서비스 함수 재사용
 from app.services.data_service import run_resume_pipeline
-from app.dependencies import get_llm
+from app.services.qna_service import QnAService
+from fastapi import APIRouter, Depends, File, Form, HTTPException, UploadFile
 
 router = APIRouter()
 
@@ -24,6 +26,7 @@ def upload_resume(
     name: str = Form(...),
     email: str = Form(...),
     llm=Depends(get_llm),
+    qna_service: QnAService = Depends(get_qna_service),
 ):
     global RESUME
     # 실제 구현 시: 파일 저장, id/토큰 생성, DB 저장 등
@@ -41,6 +44,11 @@ def upload_resume(
         "email": email,
     }
     public_url = f"/{name}_{file.filename}"
+
+    # TODO: 비동기, 모듈화
+    questions = qna_service.generate_questions(save_path)
+    RESUME["questions"] = questions
+
     run_resume_pipeline(llm, save_path)
     return {"public_url": public_url}
 
@@ -64,17 +72,19 @@ def get_resume():
 
 
 @router.post("/generate-questions")
-def generate_questions():
-    pdf_path = RESUME.get("pdf_path")
+def generate_questions(qna_service: QnAService = Depends(get_qna_service)):
+    pdf_path = RESUME.get("pdf_path", "sample.pdf")
     if not pdf_path:
         raise HTTPException(status_code=400, detail="업로드된 이력서가 없습니다.")
-    # TODO: LLM 기반 질문 생성 로직 (임시 예시)
-    questions = [
-        {str(uuid.uuid4()): "이 프로젝트에서 가장 어려웠던 점은?"},
-        {str(uuid.uuid4()): "협업 경험을 구체적으로 설명해주세요."},
-    ]
+
+    questions = qna_service.generate_questions(pdf_path)
     RESUME["questions"] = questions
     return {"questions": questions}
+
+
+@router.get("/questions")
+def get_questions():
+    return RESUME.get("questions", [])
 
 
 @router.get("/questions/{question_id}")

@@ -1,7 +1,8 @@
-from app.llm.llm_client.base import LLMClient
-from app.llm.vector_store.chroma import ChromaVectorStore
-from app.llm.rag_engine import RAGEngine
 from unittest.mock import MagicMock
+
+from app.llm.llm_client.base import LLMClient
+from app.llm.rag_engine import RAGEngine
+from app.llm.vector_store.chroma import ChromaVectorStore
 
 
 class UserMessageMetadata:
@@ -75,4 +76,5 @@ def get_mock_vector_store():
 def get_mock_rag_engine(
     vector_store=get_mock_vector_store(), llm_client=get_mock_llm_client()
 ):
-    return RAGEngine(vector_store, llm_client)
+    mock_prompt = "사용자 질문에 답변하기 위한 RAG 프롬프트"
+    return RAGEngine(vector_store, llm_client, prompt=mock_prompt)
