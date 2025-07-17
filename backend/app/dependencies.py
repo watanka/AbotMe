@@ -5,6 +5,7 @@ from app.data_pipeline.extract.pdf_resume_metadata_extractor import (
     PDFResumeMetadataExtractor,
 )
 from app.data_pipeline.prompts import chat_prompt, qna_prompt, user_query_prompt
+from app.database.uow import UnitOfWork
 from app.llm.llm_client import LLMClient
 from app.llm.llm_client.langchain_deepseek import LangChainDeepseekClient
 from app.llm.rag_engine import RAGEngine
@@ -19,6 +20,10 @@ from langchain_openai import ChatOpenAI
 
 load_dotenv()
 vector_store_dir = os.getenv("VECTOR_STORE_DIR", "./vector-db")
+
+
+def get_uow() -> UnitOfWork:
+    return UnitOfWork()
 
 
 def get_llm():
@@ -62,5 +67,6 @@ def get_qna_service(
     extractor: Extractor = Depends(get_extractor),
     vector_store: VectorStore = Depends(get_vector_store),
     llm_client: LLMClient = Depends(get_llm),
+    uow: UnitOfWork = Depends(get_uow),
 ) -> QnAService:
-    return QnAService(extractor, vector_store, qna_prompt, llm_client)
+    return QnAService(extractor, vector_store, qna_prompt, uow, llm_client)

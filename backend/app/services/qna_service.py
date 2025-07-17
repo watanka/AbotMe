@@ -1,7 +1,10 @@
 import uuid
+from datetime import datetime
 from typing import Dict, List
 
 from app.data_pipeline.extract.base import Extractor
+from app.database.models.resume import Resume
+from app.database.uow import UnitOfWork
 from app.llm.vector_store.base import VectorStore
 from app.models.schemas import QnAQuestion, QnAQuestionList
 from langchain.output_parsers import PydanticOutputParser
@@ -18,11 +21,13 @@ class QnAService:
         extractor: Extractor,
         vector_store: VectorStore,
         prompt_template: ChatPromptTemplate,
+        uow: UnitOfWork,
         llm=None,
     ):
         self.extractor = extractor
         self.vector_store = vector_store
         self.prompt_template = prompt_template
+        self.uow = uow
         self.llm = llm
         self.parser = PydanticOutputParser(pydantic_object=QnAQuestionList)
 
@@ -46,24 +51,37 @@ class QnAService:
         llm_output = runnable.invoke({"input": llm_input})
 
         questions = []
-        for llm_question in llm_output.root:
-            llm_question.question_id = str(uuid.uuid4())
-            questions.append(llm_question)
+        with self.uow:
+            for llm_question in llm_output.root:
+                llm_question.question_id = str(uuid.uuid4())
+
+                questions.append(llm_question)
+                self.uow.questions.add(
+                    convert_question_pydantic_to_dbmodel(llm_question, resume.resume_id)
+                )
+
         return questions
 
-    def get_questions(self) -> List[Dict]:
-        """
-        현재 저장된 질문 목록을 반환한다.
-        Returns: 질문 dict 리스트
-        """
-        pass
+    def get_questions(self) -> List[QnAQuestion]:
+        with self.uow:
+            return [
+                convert_question_dbmodel_to_pydantic(q)
+                for q in self.uow.questions.get_all()
+            ]
 
     def answer_question(self, question_id: str, answer_text: str) -> bool:
-        """
-        특정 질문에 대한 답변을 저장한다.
-        Returns: 성공 여부
-        """
-        pass
+
+        with self.uow:
+            self.uow.answers.add(
+                convert_answer_pydantic_to_dbmodel(
+                    QnAAnswer(
+                        question_id=question_id,
+                        answer=answer_text,
+                        created_at=datetime.utcnow(),
+                    )
+                )
+            )
+        return True
 
     def save_answer_to_vector_store(self, question_id: str) -> bool:
         """
