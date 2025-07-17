@@ -31,6 +31,14 @@ class TokenVerifyResponse(BaseModel):
     success: bool
 
 
+class ResumeResponse(BaseModel):
+    resume_id: str
+    pdf_url: str
+    name: str
+    email: str
+    created_at: Optional[str] = None
+
+
 class QnAQuestion(BaseModel):
     """
     이력서 QnA 질문 데이터 모델
