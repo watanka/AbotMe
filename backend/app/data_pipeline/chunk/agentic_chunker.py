@@ -63,7 +63,10 @@ class AgenticMetadataChunker(Chunker):
                 "tags": t.tags,
                 "name": t.name,
                 "chunk_text": meta_list[t.label_id]["text"],
-                "bbox": meta_list[t.label_id]["bbox"],
+                "x0": meta_list[t.label_id]["x0"],
+                "top": meta_list[t.label_id]["top"],
+                "x1": meta_list[t.label_id]["x1"],
+                "bottom": meta_list[t.label_id]["bottom"],
                 "page_id": meta_list[t.label_id]["page_id"],
             }
             for t in llm_output.root
