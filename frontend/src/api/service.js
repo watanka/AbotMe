@@ -18,9 +18,12 @@ export const qnaAPI = {
     // 답변 제출
     submitAnswer: async (questionId, answerText) => {
         try {
+            const formData = new FormData();
+            formData.append('answer', answerText);
             const response = await axios.post(
                 `${API_URL}/resume/questions/${questionId}/answer`,
-                { answer_text: answerText }
+                formData,
+                { headers:{ 'Content-Type': 'multipart/form-data' }}
             );
             return response.data;
         } catch (error) {
