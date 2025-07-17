@@ -6,7 +6,12 @@ from app.data_pipeline.extract.base import Extractor
 from app.database.models.resume import Resume
 from app.database.uow import UnitOfWork
 from app.llm.vector_store.base import VectorStore
-from app.models.schemas import QnAQuestion, QnAQuestionList
+from app.models.schemas import QnAAnswer, QnAQuestion, QnAQuestionList
+from app.services.mappers import (
+    convert_answer_pydantic_to_dbmodel,
+    convert_question_dbmodel_to_pydantic,
+    convert_question_pydantic_to_dbmodel,
+)
 from langchain.output_parsers import PydanticOutputParser
 from langchain_core.prompts import ChatPromptTemplate
 
@@ -36,12 +41,12 @@ class QnAService:
         runnable = self.prompt_template | self.llm | self.parser
         return runnable
 
-    def generate_questions(self, pdf_path: str) -> List[QnAQuestion]:
+    def generate_questions(self, resume: Resume) -> List[QnAQuestion]:
         """
         PDF에서 메타데이터를 추출하고, 각 label_id별로 질문을 생성한다.
         Returns: 질문 dict 리스트
         """
-        meta_list = self.extractor.extract(pdf_path)
+        meta_list = self.extractor.extract(resume.pdf_url)
         llm_input_lines = [
             f"[{label_id}] {metadata['text']}"
             for label_id, metadata in meta_list.items()
