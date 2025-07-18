@@ -76,5 +76,8 @@ def get_mock_vector_store():
 def get_mock_rag_engine(
     vector_store=get_mock_vector_store(), llm_client=get_mock_llm_client()
 ):
-    mock_prompt = "사용자 질문에 답변하기 위한 RAG 프롬프트"
-    return RAGEngine(vector_store, llm_client, prompt=mock_prompt)
+    mock_prompt = MagicMock()
+    mock_prompt.format_messages = MagicMock(
+        return_value=[{"content": "MOCK LLM RESPONSE"}]
+    )
+    return RAGEngine(vector_store, prompt=mock_prompt, llm_client=llm_client)
