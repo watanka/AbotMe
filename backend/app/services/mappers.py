@@ -36,6 +36,7 @@ def convert_question_dbmodel_to_pydantic(q: Question) -> QnAQuestion:
         question_id=str(q.question_id),
         label_id=q.label_id,
         question=q.question,
+        tags=[tag.tag_name for tag in q.tags],
     )
 
 

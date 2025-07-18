@@ -14,3 +14,4 @@ class Question(Base):
     )
     label_id = Column(String)
     question = Column(String, nullable=False)
+    tags = relationship("Tag", backref="question", cascade="all, delete-orphan")

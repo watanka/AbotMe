@@ -1,9 +1,11 @@
+import json
 import uuid
 from datetime import datetime
-from typing import Dict, List
+from typing import List
 
 from app.data_pipeline.extract.base import Extractor
 from app.database.models.resume import Resume
+from app.database.models.tag import Tag, TagCategory
 from app.database.uow import UnitOfWork
 from app.llm.vector_store.base import VectorStore
 from app.models.schemas import QnAAnswer, QnAQuestion, QnAQuestionList
@@ -64,6 +66,15 @@ class QnAService:
                 self.uow.questions.add(
                     convert_question_pydantic_to_dbmodel(llm_question, resume.resume_id)
                 )
+                self.uow.commit()
+                for tag in llm_question.tags:
+                    self.uow.tags.add(
+                        Tag(
+                            question_id=llm_question.question_id,
+                            tag_name=TagCategory(tag),
+                        )
+                    )
+                    self.uow.commit()
 
         return questions
 

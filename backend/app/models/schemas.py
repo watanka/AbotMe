@@ -47,6 +47,7 @@ class QnAQuestion(BaseModel):
     question_id: str | None = None
     label_id: str
     question: str
+    tags: List[str]
 
 
 class QnAQuestionList(BaseModel):
