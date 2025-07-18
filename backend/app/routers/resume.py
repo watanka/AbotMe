@@ -21,7 +21,6 @@ from fastapi import APIRouter, Depends, File, Form, HTTPException, UploadFile
 router = APIRouter()
 
 # In-memory storage 예시 (실 서비스에서는 DB/파일시스템/벡터스토어 등으로 대체)
-RESUME = {}
 
 
 # Helper: edit_token 검증
@@ -40,7 +39,6 @@ def upload_resume(
     qna_service: QnAService = Depends(get_qna_service),
     uow: UnitOfWork = Depends(get_uow),
 ):
-    global RESUME
     # 실제 구현 시: 파일 저장, id/토큰 생성, DB 저장 등
     # TODO: 파일 저장 경로 수정
     save_path = f"/home/silver/workspace/AbotMe/frontend/public/{name}_{file.filename}"
@@ -53,18 +51,9 @@ def upload_resume(
         uow.resumes.add(resume)
         uow.commit()
         questions = qna_service.generate_questions(resume)
-    # RESUME = {
-    #     "pdf_path": save_path,
-    #     "questions": {},
-    #     "answers": {},
-    #     "name": name,
-    #     "email": email,
-    # }
     public_url = f"/{name}_{file.filename}"
 
     # TODO: 비동기, 모듈화
-
-    # RESUME["questions"] = questions
 
     run_resume_pipeline(llm, save_path)
     return {"public_url": public_url}
