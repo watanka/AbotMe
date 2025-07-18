@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { qnaAPI } from '../api/service';
-
 function PopupAlert({ show, onClose, message }) {
     return (
         <div
@@ -23,7 +22,7 @@ function PopupAlert({ show, onClose, message }) {
     );
 }
 
-export default function ResumeQnA() {
+export default function ResumeQnA(props) {
     const [questions, setQuestions] = useState([]);
     const [answers, setAnswers] = useState({}); // { [questionId]: value }
     const [loading, setLoading] = useState(true);
@@ -79,7 +78,7 @@ export default function ResumeQnA() {
                 <div className="w-full flex justify-end mb-2">
                     <button
                         className="px-4 py-2 rounded-lg bg-primary text-black font-semibold shadow hover:bg-primary/90 transition"
-                        onClick={() => navigate("/")}
+                        onClick={props.onGoResume ? props.onGoResume : () => navigate("/")}
                     >
                         이력서로 돌아가기
                     </button>
