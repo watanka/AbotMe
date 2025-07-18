@@ -7,6 +7,7 @@ from app.database.models.base import Base
 from app.database.models.chunk import ResumeChunk
 from app.database.models.question import Question
 from app.database.models.resume import Resume
+from app.database.models.tag import Tag
 from dotenv import load_dotenv
 from sqlalchemy import engine_from_config, pool
 
