@@ -122,7 +122,10 @@ def get_answer(question_id: str, uow: UnitOfWork = Depends(get_uow)):
 # 4. 답변 저장 (질문별 1대1, edit_token 필요)
 @router.post("/questions/{question_id}/answer")
 def save_answer(
-    question_id: str, answer: str = Form(...), uow: UnitOfWork = Depends(get_uow)
+    question_id: str,
+    answer: str = Form(...),
+    uow: UnitOfWork = Depends(get_uow),
+    qna_service: QnAService = Depends(get_qna_service),
 ):
     with uow:
         question = uow.questions.get_by_id(question_id)
@@ -135,4 +138,5 @@ def save_answer(
                 created_at=datetime.utcnow(),
             )
         )
+    qna_service.save_answer_to_vector_store(question_id)
     return {"success": True}

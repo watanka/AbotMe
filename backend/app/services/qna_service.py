@@ -104,4 +104,22 @@ class QnAService:
         답변이 달린 질문을 벡터스토어에 저장한다.
         Returns: 성공 여부
         """
-        pass
+        with self.uow:
+            question = self.uow.questions.get_by_id(question_id)
+            latest_answer = max(question.answer, key=lambda x: x.created_at)
+            if not question:
+                return False
+
+            self.vector_store.add_documents(
+                documents=[f"Q:{question.question}\nA:{latest_answer.answer}"],
+                ids=[question_id],
+                metadatas=[
+                    {
+                        "label_id": question.label_id,
+                        "tags": json.dumps(
+                            [tag.tag_name.value for tag in question.tags]
+                        ),
+                    }
+                ],
+            )
+        return True
