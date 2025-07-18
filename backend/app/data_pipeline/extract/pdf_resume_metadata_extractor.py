@@ -23,7 +23,10 @@ class PDFResumeMetadataExtractor(Extractor):
                         "page_id": page_num,
                         "label_id": label_id,
                         "text": text,
-                        "bbox": [w["x0"], w["top"], w["x1"], w["bottom"]],
+                        "x0": w["x0"],
+                        "top": w["top"],
+                        "x1": w["x1"],
+                        "bottom": w["bottom"],
                         # TODO: 좌표는 상대좌표 0 - 1 range로 변경 필요
                     }
         return results

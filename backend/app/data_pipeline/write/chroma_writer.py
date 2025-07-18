@@ -25,7 +25,10 @@ class ChromaMetadataVectorStoreWriter(VectorStoreWriter):
         for _, doc in enumerate(docs):
             tags = json.dumps(doc.get("tags", []))  # list -> str
             name = doc.get("name", "")
-            x0, top, x1, bottom = doc.get("bbox")
+            x0 = doc.get("x0")
+            top = doc.get("top")
+            x1 = doc.get("x1")
+            bottom = doc.get("bottom")
             label_id = doc.get("label_id", "")
             self.vector_store.add_documents(
                 documents=[doc.get("chunk_text", "")],

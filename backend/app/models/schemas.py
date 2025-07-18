@@ -1,5 +1,6 @@
+from typing import List, Literal, Optional
+
 from pydantic import BaseModel
-from typing import Optional, Literal
 
 
 class ChatRequest(BaseModel):
@@ -25,5 +26,39 @@ class HistoryItem(BaseModel):
 class TokenVerifyRequest(BaseModel):
     token: str
 
+
 class TokenVerifyResponse(BaseModel):
     success: bool
+
+
+class ResumeResponse(BaseModel):
+    resume_id: str
+    pdf_url: str
+    name: str
+    email: str
+    created_at: Optional[str] = None
+
+
+class QnAQuestion(BaseModel):
+    """
+    이력서 QnA 질문 데이터 모델
+    """
+
+    question_id: str | None = None
+    label_id: str
+    question: str
+    tags: List[str]
+
+
+class QnAQuestionList(BaseModel):
+    root: List[QnAQuestion]
+
+
+class QnAAnswer(BaseModel):
+    """
+    이력서 QnA 답변 데이터 모델
+    """
+
+    question_id: str
+    answer: str
+    created_at: Optional[str] = None

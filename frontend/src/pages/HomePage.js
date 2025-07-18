@@ -75,7 +75,7 @@ export default function HomePage() {
       {adminPage === 'qna' && (
         <div className="w-full flex flex-col items-center mt-16">
           <h3 className="font-bold mb-4">QnA 관리</h3>
-          <ResumeQnA />
+          <ResumeQnA onGoResume={() => setAdminPage('home')} />
         </div>
       )}
       {adminPage === 'home' && (

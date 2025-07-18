@@ -21,7 +21,12 @@ export default function ResumeExistenceGate({ children, fallback }) {
                     setStatus("notfound");
                 } else {
                     setStatus("exists");
-                    setPdfUrl(data.pdf_url);
+                    const idx = data.pdf_url.indexOf("/public/");
+                    if (idx !== -1) {
+                        setPdfUrl("/" + data.pdf_url.substring(idx + "/public/".length));
+                    } else {
+                        setPdfUrl(data.pdf_url);
+                    }
                 }
             } catch (error) {
                 setStatus("error");
