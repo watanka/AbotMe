@@ -19,7 +19,7 @@ vector_store_dir = os.getenv("VECTOR_STORE_DIR", "/vector-db")
 
 def run_resume_pipeline(
     llm,
-    pdf_path: str,
+    pdf_url: str,
     persist_dir: str = vector_store_dir,
     collection_name: str = "resume",
 ):
@@ -31,8 +31,8 @@ def run_resume_pipeline(
     vector_store = ChromaVectorStore(persist_dir, GeminiEmbeddingModel())
     writer = ChromaMetadataVectorStoreWriter(vector_store)
 
-    assert Path(pdf_path).exists(), f"PDF not found: {pdf_path}"
-    meta_list = extractor.extract(pdf_path)
+    assert Path(pdf_url).exists(), f"PDF not found: {pdf_url}"
+    meta_list = extractor.extract(pdf_url)
     print("[INFO] PDF 텍스트 추출 완료")
     chunks = chunker.chunk(meta_list, callback=langfuse_callback_handler)
     print(f"[INFO] {len(chunks)}개 청크로 분할 완료")

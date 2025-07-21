@@ -1,7 +1,8 @@
-from app.llm.llm_client.base import LLMClient
-from app.llm.vector_store.chroma import ChromaVectorStore
-from app.llm.rag_engine import RAGEngine
 from unittest.mock import MagicMock
+
+from app.llm.llm_client.base import LLMClient
+from app.llm.rag_engine import RAGEngine
+from app.llm.vector_store.chroma import ChromaVectorStore
 
 
 class UserMessageMetadata:
@@ -75,4 +76,8 @@ def get_mock_vector_store():
 def get_mock_rag_engine(
     vector_store=get_mock_vector_store(), llm_client=get_mock_llm_client()
 ):
-    return RAGEngine(vector_store, llm_client)
+    mock_prompt = MagicMock()
+    mock_prompt.format_messages = MagicMock(
+        return_value=[{"content": "MOCK LLM RESPONSE"}]
+    )
+    return RAGEngine(vector_store, prompt=mock_prompt, llm_client=llm_client)

@@ -2,6 +2,50 @@ import axios from 'axios';
 
 const API_URL = process.env.REACT_APP_API_URL;
 
+// QnA API
+export const qnaAPI = {
+    // 질문 목록 불러오기
+    getQuestions: async () => {
+        try {
+            const response = await axios.get(`${API_URL}/resume/questions`);
+            return response.data.questions || response.data;
+        } catch (error) {
+            console.error('QnA getQuestions Error:', error);
+            throw error;
+        }
+    },
+
+    // 답변 제출
+    submitAnswer: async (questionId, answerText) => {
+        try {
+            const formData = new FormData();
+            formData.append('answer', answerText);
+            const response = await axios.post(
+                `${API_URL}/resume/questions/${questionId}/answer`,
+                formData,
+                { headers:{ 'Content-Type': 'multipart/form-data' }}
+            );
+            return response.data;
+        } catch (error) {
+            console.error('QnA submitAnswer Error:', error);
+            throw error;
+        }
+    },
+
+    // (옵션) 답변 단일 조회
+    getAnswer: async (questionId) => {
+        try {
+            const response = await axios.get(
+                `${API_URL}/resume/questions/${questionId}/answer`
+            );
+            return response.data;
+        } catch (error) {
+            console.error('QnA getAnswer Error:', error);
+            throw error;
+        }
+    }
+};
+
 // Chat API
 export const chatAPI = {
     sendMessage: async (message) => {
