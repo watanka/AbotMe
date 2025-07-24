@@ -4,7 +4,8 @@ from logging.config import fileConfig
 from alembic import context
 from app.database.models.answer import Answer
 from app.database.models.base import Base
-from app.database.models.chunk import ResumeChunk
+from app.database.models.chunk import Chunk
+from app.database.models.chunk_group import ChunkGroup
 from app.database.models.question import Question
 from app.database.models.resume import Resume
 from app.database.models.tag import Tag

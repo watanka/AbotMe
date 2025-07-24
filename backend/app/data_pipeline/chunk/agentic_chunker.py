@@ -7,7 +7,7 @@ from .base import Chunker
 
 
 class ResumeChunk(BaseModel):
-    label_id: str
+    labels: List[str]
     tags: List[str]
     name: str
 
@@ -55,20 +55,28 @@ class AgenticMetadataChunker(Chunker):
 
         # 3. LLM 호출
         runnable = self.prompt_template | self.llm | self.parser
-        llm_output = runnable.invoke({"input": llm_input})
+        if callback:
+            llm_output = runnable.invoke(
+                {"input": llm_input}, config={"callbacks": [callback]}
+            )
+        else:
+            llm_output = runnable.invoke({"input": llm_input})
 
         result_chunks = [
-            {
-                "label_id": t.label_id,
-                "tags": t.tags,
-                "name": t.name,
-                "chunk_text": meta_list[t.label_id]["text"],
-                "x0": meta_list[t.label_id]["x0"],
-                "top": meta_list[t.label_id]["top"],
-                "x1": meta_list[t.label_id]["x1"],
-                "bottom": meta_list[t.label_id]["bottom"],
-                "page_id": meta_list[t.label_id]["page_id"],
-            }
+            [
+                {
+                    "label": label,
+                    "tags": t.tags,
+                    "name": t.name,
+                    "chunk_text": meta_list[label]["text"],
+                    "x0": meta_list[label]["x0"],
+                    "top": meta_list[label]["top"],
+                    "x1": meta_list[label]["x1"],
+                    "bottom": meta_list[label]["bottom"],
+                    "page_id": meta_list[label]["page_id"],
+                }
+                for label in t.labels
+            ]
             for t in llm_output.root
         ]
         return result_chunks
