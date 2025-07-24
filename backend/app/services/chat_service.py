@@ -66,7 +66,31 @@ def stream_chat_response(
             ):
                 answer.append(chunk)
                 yield json.dumps({"type": "chunk", "data": chunk})
-            yield json.dumps({"type": "metadata", "data": metadata})
+
+
+def stream_graph_chat_response(
+    graph_rag_engine: GraphRAGEngine,
+    request: ChatRequest,
+):
+    """
+    사용자의 메시지를 받아 Gemini LLM을 통해 응답을 스트림으로 생성합니다.
+    """
+
+    def answer_stream():
+        if request.session_id:
+            add_history(
+                request.session_id, HistoryItem(role="user", message=request.message)
+            )
+        try:
+            answer = []
+            
+            # metadata 정보 기반 분기: 사용자 답변 and PDF 하이라이트
+            for chunk in graph_rag_engine.generate_answer(
+                request.message, callback=langfuse_callback_handler
+            ):
+                answer.append(chunk)
+                yield json.dumps({"type": "chunk", "data": chunk})
+            yield json.dumps({"type": "metadata", "data": "0"})
         except Exception as e:
             import traceback
 

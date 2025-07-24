@@ -6,9 +6,10 @@ from app.database.models.answer import Answer
 from app.database.models.question import Question
 from app.database.models.resume import Resume
 from app.database.uow import UnitOfWork
-from app.dependencies import get_llm, get_qna_service, get_uow
-from app.services.data_service import run_resume_pipeline
-
+from app.dependencies import get_llm, get_qna_service, get_uow, get_graph_db
+from app.services.data_service import run_graph_resume_pipeline, run_resume_pipeline
+from app.llm.graph_rag_engine import GraphRAGEngine
+from langchain_neo4j import Neo4jGraph
 # 기존 서비스 함수 재사용
 from app.services.mappers import (
     convert_answer_dbmodel_to_pydantic,
@@ -36,6 +37,7 @@ def upload_resume(
     name: str = Form(...),
     email: str = Form(...),
     llm=Depends(get_llm),
+    graph_db: Neo4jGraph = Depends(get_graph_db),
     qna_service: QnAService = Depends(get_qna_service),
     uow: UnitOfWork = Depends(get_uow),
 ):
@@ -55,7 +57,7 @@ def upload_resume(
 
     # TODO: 비동기, 모듈화
 
-    run_resume_pipeline(llm, save_path)
+    run_graph_resume_pipeline(llm, save_path, graph_db)
     return {"public_url": public_url}
 
 
