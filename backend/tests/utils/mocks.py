@@ -73,9 +73,7 @@ def get_mock_vector_store():
     return MockVectorStore()
 
 
-def get_mock_rag_engine(
-    vector_store=get_mock_vector_store(), llm=get_mock_llm()
-):
+def get_mock_rag_engine(vector_store=get_mock_vector_store(), llm=get_mock_llm()):
     mock_prompt = MagicMock()
     mock_prompt.format_messages = MagicMock(
         return_value=[{"content": "MOCK LLM RESPONSE"}]

@@ -4,6 +4,7 @@ from langfuse import get_client
 from dotenv import load_dotenv
 from langchain_neo4j import Neo4jGraph
 
+
 class GraphRAGEngine:
     """
     LLM과 GraphDB(Neo4J)를 결합한 RAG 엔진
@@ -27,7 +28,6 @@ class GraphRAGEngine:
         if "NO_CYPHER" in query_cypher.content:
             return "NO_CYPHER"
         return str(self.graph_db.query(query_cypher.content))
-
 
     def generate_answer(self, msg: str, callback: Optional[Callable] = None):
         context = self.retrieve_context(msg)

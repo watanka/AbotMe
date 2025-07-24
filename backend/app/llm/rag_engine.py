@@ -16,12 +16,7 @@ class RAGEngine:
     LLM과 벡터스토어(VectorStore)를 결합한 RAG 엔진
     """
 
-    def __init__(
-        self,
-        vector_store: VectorStore,
-        prompt: ChatPromptTemplate,
-        llm
-    ):
+    def __init__(self, vector_store: VectorStore, prompt: ChatPromptTemplate, llm):
         self.vector_store = vector_store
         self.prompt = prompt
         self.llm = llm
@@ -31,6 +26,8 @@ class RAGEngine:
 
     def generate_answer(self, msg: str, context, callback: Optional[Callable] = None):
         filled_prompt = self.prompt.format_messages(msg=msg, context=context)
-        
-        for chunk in self.llm.stream(filled_prompt, config={"callbacks": [callback] if callback else []}):
+
+        for chunk in self.llm.stream(
+            filled_prompt, config={"callbacks": [callback] if callback else []}
+        ):
             yield chunk.content

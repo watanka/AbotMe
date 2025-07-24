@@ -30,7 +30,9 @@ class ChromaMetadataVectorStoreWriter(VectorStoreWriter):
             self.uow.chunk_groups.add(chunk_group)
             self.uow.session.flush()  # chunk_group.id 확보
 
-            chunk_text = '\t'.join([chunk.get("chunk_text", "") for chunk in chunk_list])
+            chunk_text = "\t".join(
+                [chunk.get("chunk_text", "") for chunk in chunk_list]
+            )
             self.vector_store.add_documents(
                 documents=[chunk_text],
                 metadatas=[{"chunk_group_id": str(chunk_group.id)}],

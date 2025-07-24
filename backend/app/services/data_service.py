@@ -43,7 +43,9 @@ def run_resume_pipeline(
     print("chunk", chunks)
     print(f"[INFO] {len(chunks)}개 청크로 분할 완료")
 
-    writer.save(chunks, )
+    writer.save(
+        chunks,
+    )
     print(f"[INFO] ChromaDB에 저장 완료: {persist_dir}/{collection_name}")
 
 
@@ -56,15 +58,14 @@ def run_graph_resume_pipeline(
     extractor = PDFResumeMetadataExtractor()
     meta_list = extractor.extract(pdf_url)
     graph_db_writer = GraphDBWriter(graph_db, llm)
-    llm_input_lines = "\n".join([
-            f"[{label_id}] {metadata['text']}"
-            for label_id, metadata in meta_list.items()
-        ])
+    llm_input_lines = "\n".join(
+        [f"[{label_id}] {metadata['text']}" for label_id, metadata in meta_list.items()]
+    )
     graph_documents_filtered = graph_db_writer.convert_text_to_graph(llm_input_lines)
     graph_db_writer.save(graph_documents_filtered)
     print("그래프 결과")
     print(graph.query("MATCH (n) RETURN n"))
-    
+
 
 if __name__ == "__main__":
     RESUME_PATH = os.environ.get("RESUME_PATH", "resume.pdf")

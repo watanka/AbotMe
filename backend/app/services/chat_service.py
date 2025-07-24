@@ -71,13 +71,22 @@ def stream_chat_response(
             metadata_result = []
             with uow:
                 for metadata in metadata_list:
-                    chunk_group = uow.chunk_groups.get_by_id(metadata.get("chunk_group_id"))
+                    chunk_group = uow.chunk_groups.get_by_id(
+                        metadata.get("chunk_group_id")
+                    )
                     if not chunk_group:
                         continue
                     chunks = uow.chunks.get_by_chunk_group_id(chunk_group.id)
                     for chunk in chunks:
-                        metadata_result.append({"x0": chunk.x0, "x1": chunk.x1, "top": chunk.top, "bottom": chunk.bottom, "page_id": chunk.page_id})
-                    
+                        metadata_result.append(
+                            {
+                                "x0": chunk.x0,
+                                "x1": chunk.x1,
+                                "top": chunk.top,
+                                "bottom": chunk.bottom,
+                                "page_id": chunk.page_id,
+                            }
+                        )
 
             for chunk in rag_engine.generate_answer(
                 user_message, context, callback=langfuse_callback_handler
@@ -101,7 +110,6 @@ def stream_chat_response(
     return StreamingResponse(answer_stream(), media_type="text/plain")
 
 
-
 def stream_graph_chat_response(
     graph_rag_engine: GraphRAGEngine,
     request: ChatRequest,
@@ -117,7 +125,7 @@ def stream_graph_chat_response(
             )
         try:
             answer = []
-            
+
             # metadata 정보 기반 분기: 사용자 답변 and PDF 하이라이트
             for chunk in graph_rag_engine.generate_answer(
                 request.message, callback=langfuse_callback_handler

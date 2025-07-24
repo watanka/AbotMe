@@ -36,7 +36,9 @@ def get_llm():
     #     openai_api_base=os.getenv("OPENROUTER_BASE_URL"),
     #     model_name="deepseek/deepseek-r1-0528-qwen3-8b:free",
     # )
-    llm = ChatGoogleGenerativeAI(model="gemini-2.0-flash-exp", api_key=os.getenv("GOOGLE_API_KEY"))
+    llm = ChatGoogleGenerativeAI(
+        model="gemini-2.0-flash-exp", api_key=os.getenv("GOOGLE_API_KEY")
+    )
 
     # llm = LangChainGeminiClient().llm
     return llm
@@ -50,6 +52,7 @@ def get_vector_store() -> VectorStore:
     vector_store = ChromaVectorStore(vector_store_dir, GeminiEmbeddingModel())
     return vector_store
 
+
 def get_graph_db():
 
     return Neo4jGraph(refresh_schema=False)
@@ -61,15 +64,17 @@ def get_llm_client() -> LLMClient:
 
 def get_rag_engine(
     vector_store: VectorStore = Depends(get_vector_store),
-    llm = Depends(get_llm),
+    llm=Depends(get_llm),
 ) -> RAGEngine:
     return RAGEngine(vector_store, chat_prompt, llm)
 
+
 def get_graph_rag_engine(
     graph_db: Neo4jGraph = Depends(get_graph_db),
-    llm = Depends(get_llm),
+    llm=Depends(get_llm),
 ) -> GraphRAGEngine:
     return GraphRAGEngine(graph_db, text_to_cypher_prompt, chat_prompt, llm)
+
 
 def get_user_message_handler(
     llm_client: LLMClient = Depends(get_llm),
