@@ -7,8 +7,6 @@ from app.data_pipeline.extract.pdf_resume_metadata_extractor import (
 from langchain_neo4j import Neo4jGraph
 from app.data_pipeline.prompts import chat_prompt, qna_prompt, user_query_prompt
 from app.database.uow import UnitOfWork
-from app.llm.llm_client import LLMClient
-from app.llm.llm_client.langchain_deepseek import LangChainDeepseekClient
 from app.llm.rag_engine import RAGEngine
 from app.llm.user_message_handler import UserMessageHandler
 from app.llm.vector_store import VectorStore
@@ -17,7 +15,6 @@ from app.llm.vector_store.embedding import GeminiEmbeddingModel
 from app.services.qna_service import QnAService
 from dotenv import load_dotenv
 from fastapi import Depends
-from langchain_openai import ChatOpenAI
 from langchain_google_genai import ChatGoogleGenerativeAI
 from app.llm.graph_rag_engine import GraphRAGEngine
 from app.data_pipeline.prompts import text_to_cypher_prompt
@@ -58,10 +55,6 @@ def get_graph_db():
     return Neo4jGraph(refresh_schema=False)
 
 
-def get_llm_client() -> LLMClient:
-    return LangChainDeepseekClient()
-
-
 def get_rag_engine(
     vector_store: VectorStore = Depends(get_vector_store),
     llm=Depends(get_llm),
@@ -77,15 +70,15 @@ def get_graph_rag_engine(
 
 
 def get_user_message_handler(
-    llm_client: LLMClient = Depends(get_llm),
+    llm = Depends(get_llm),
 ) -> UserMessageHandler:
-    return UserMessageHandler(llm_client, user_query_prompt)
+    return UserMessageHandler(llm, user_query_prompt)
 
 
 def get_qna_service(
     extractor: Extractor = Depends(get_extractor),
     vector_store: VectorStore = Depends(get_vector_store),
-    llm_client: LLMClient = Depends(get_llm),
+    llm = Depends(get_llm),
     uow: UnitOfWork = Depends(get_uow),
 ) -> QnAService:
-    return QnAService(extractor, vector_store, qna_prompt, uow, llm_client)
+    return QnAService(extractor, vector_store, qna_prompt, uow, llm)

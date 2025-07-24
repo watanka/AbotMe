@@ -6,7 +6,6 @@ RAGEngine: LLM + VectorStore 결합 추상화
 
 from typing import Callable, Optional
 
-from app.llm.llm_client import LLMClient
 from app.llm.vector_store import VectorStore
 from langchain_core.prompts import ChatPromptTemplate
 
@@ -30,4 +29,4 @@ class RAGEngine:
         for chunk in self.llm.stream(
             filled_prompt, config={"callbacks": [callback] if callback else []}
         ):
-            yield chunk.content
+            yield chunk
