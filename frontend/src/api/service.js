@@ -23,7 +23,7 @@ export const qnaAPI = {
             const response = await axios.post(
                 `${API_URL}/resume/questions/${questionId}/answer`,
                 formData,
-                { headers:{ 'Content-Type': 'multipart/form-data' }}
+                { headers: { 'Content-Type': 'multipart/form-data' } }
             );
             return response.data;
         } catch (error) {
