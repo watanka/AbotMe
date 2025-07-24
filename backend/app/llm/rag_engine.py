@@ -20,16 +20,17 @@ class RAGEngine:
         self,
         vector_store: VectorStore,
         prompt: ChatPromptTemplate,
-        llm_client: LLMClient,
+        llm
     ):
         self.vector_store = vector_store
         self.prompt = prompt
-        self.llm_client = llm_client
+        self.llm = llm
 
     def retrieve_context(self, msg: dict, k: int = 5):
         return self.vector_store.query_with_metadata(msg, k=k)
 
     def generate_answer(self, msg: str, context, callback: Optional[Callable] = None):
         filled_prompt = self.prompt.format_messages(msg=msg, context=context)
-        for chunk in self.llm_client.generate(filled_prompt, callback=callback):
-            yield chunk
+        
+        for chunk in self.llm.stream(filled_prompt, config={"callbacks": [callback] if callback else []}):
+            yield chunk.content

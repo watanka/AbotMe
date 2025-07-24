@@ -11,8 +11,8 @@ class UserMessageMetadata:
         self.metadata = {}
 
 
-class MockLLMClient(LLMClient):
-    def generate(self, prompt: str, **kwargs) -> str:
+class MockLLM:
+    def stream(self, prompt: str, **kwargs) -> str:
         response = "MOCK LLM RESPONSE"
         for chunk in response:
             yield chunk
@@ -61,8 +61,8 @@ class UserMockMessageHandler:
         return UserMessageMetadata(content=message)
 
 
-def get_mock_llm_client():
-    return MockLLMClient()
+def get_mock_llm():
+    return MockLLM()
 
 
 def get_mock_user_message_handler():
@@ -74,10 +74,10 @@ def get_mock_vector_store():
 
 
 def get_mock_rag_engine(
-    vector_store=get_mock_vector_store(), llm_client=get_mock_llm_client()
+    vector_store=get_mock_vector_store(), llm=get_mock_llm()
 ):
     mock_prompt = MagicMock()
     mock_prompt.format_messages = MagicMock(
         return_value=[{"content": "MOCK LLM RESPONSE"}]
     )
-    return RAGEngine(vector_store, prompt=mock_prompt, llm_client=llm_client)
+    return RAGEngine(vector_store, prompt=mock_prompt, llm=llm)
