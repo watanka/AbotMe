@@ -1,6 +1,5 @@
 from unittest.mock import MagicMock
 
-from app.llm.llm_client.base import LLMClient
 from app.llm.rag_engine import RAGEngine
 from app.llm.vector_store.chroma import ChromaVectorStore
 

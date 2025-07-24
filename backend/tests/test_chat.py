@@ -1,13 +1,13 @@
 from app.main import create_app
 from fastapi.testclient import TestClient
 from app.dependencies import (
-    get_llm_client,
+    get_llm,
     get_user_message_handler,
     get_vector_store,
     get_rag_engine,
 )
 from tests.utils.mocks import (
-    get_mock_llm_client,
+    get_mock_llm,
     get_mock_vector_store,
     get_mock_rag_engine,
     get_mock_user_message_handler,
@@ -22,7 +22,7 @@ client = TestClient(app)
 def test_chat_streaming():
     app.dependency_overrides[get_rag_engine] = get_mock_rag_engine
     app.dependency_overrides[get_vector_store] = get_mock_vector_store
-    app.dependency_overrides[get_llm_client] = get_mock_llm_client
+    app.dependency_overrides[get_llm] = get_mock_llm
     app.dependency_overrides[get_user_message_handler] = get_mock_user_message_handler
     import re
 

@@ -148,7 +148,7 @@ def test_save_chunks_to_neo4j():
 
     graph.add_graph_documents(graph_documents_filtered, include_source=True)
 
-
+@pytest.mark.skip("실제 llm 사용")
 def test_user_query2_cypher():
 
     load_dotenv()

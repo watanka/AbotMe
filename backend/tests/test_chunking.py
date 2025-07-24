@@ -1,12 +1,12 @@
 import json
 import os
-
+import pytest
 from app.data_pipeline.chunk.agentic_chunker import AgenticMetadataChunker
 from app.data_pipeline.extract import PDFResumeMetadataExtractor
 from app.data_pipeline.prompts import resume_prompt
 from langchain_google_genai import ChatGoogleGenerativeAI
 
-
+@pytest.mark.skip(reason="실제 llm 사용")
 def test_chunking(sample_pdf_paths):
     llm = ChatGoogleGenerativeAI(
         model="gemini-2.0-flash-exp", api_key=os.getenv("GOOGLE_API_KEY")
