@@ -70,7 +70,7 @@ def get_graph_rag_engine(
 
 
 def get_user_message_handler(
-    llm = Depends(get_llm),
+    llm=Depends(get_llm),
 ) -> UserMessageHandler:
     return UserMessageHandler(llm, user_query_prompt)
 
@@ -78,7 +78,7 @@ def get_user_message_handler(
 def get_qna_service(
     extractor: Extractor = Depends(get_extractor),
     vector_store: VectorStore = Depends(get_vector_store),
-    llm = Depends(get_llm),
+    llm=Depends(get_llm),
     uow: UnitOfWork = Depends(get_uow),
 ) -> QnAService:
     return QnAService(extractor, vector_store, qna_prompt, uow, llm)

@@ -8,11 +8,10 @@ from app.data_pipeline.write.chroma_writer import ChromaMetadataVectorStoreWrite
 from app.llm.vector_store.chroma import ChromaVectorStore
 from app.llm.vector_store.embedding import GeminiEmbeddingModel
 from dotenv import load_dotenv
-from langchain_core.prompts import ChatPromptTemplate
 from langchain_google_genai import ChatGoogleGenerativeAI
 from langfuse.langchain import CallbackHandler
-from langchain_core.documents import Document
-from langchain_experimental.graph_transformers import LLMGraphTransformer
+from app.data_pipeline.write.neo4j_writer import GraphDBWriter
+
 from app.database.uow import UnitOfWork
 from app.database.models.resume import Resume
 

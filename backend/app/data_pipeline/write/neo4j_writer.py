@@ -1,6 +1,7 @@
 from langchain_experimental.graph_transformers import LLMGraphTransformer
 from langchain_core.documents import Document
-
+from langchain_neo4j import Neo4jGraph
+from typing import List
 
 class GraphDBWriter:
     def __init__(self, graph_db: Neo4jGraph, llm):

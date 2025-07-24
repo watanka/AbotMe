@@ -6,16 +6,10 @@ from dotenv import load_dotenv
 from langchain_core.prompts import ChatPromptTemplate
 from langfuse import get_client
 
-os.environ["NEO4J_URI"] = "neo4j://localhost:7687"
-os.environ["NEO4J_USERNAME"] = "neo4j"
-os.environ["NEO4J_PASSWORD"] = "dmstjd6918"
-
-graph = Neo4jGraph(refresh_schema=False)
 from langchain_experimental.graph_transformers import LLMGraphTransformer
-from langchain_openai import ChatOpenAI
 from langchain_google_genai import ChatGoogleGenerativeAI
 from langchain_core.documents import Document
-from langchain_openai import ChatOpenAI
+
 
 
 llm = ChatGoogleGenerativeAI(
@@ -24,7 +18,7 @@ llm = ChatGoogleGenerativeAI(
 )
 
 llm_transformer = LLMGraphTransformer(llm=llm)
-
+graph = Neo4jGraph(refresh_schema=False)
 
 @pytest.mark.skip
 def test_save_chunks_to_neo4j():
@@ -33,7 +27,7 @@ def test_save_chunks_to_neo4j():
 
     # meta_list = extractor.extract("./tests/resume/eunsungshin-ml.pdf")
     # chunk_groups = chunker.chunk(meta_list)
-
+    
     with open("./tests/chunk_results/eunsung_안성희 이력서.json", "r") as f:
         chunk_groups = json.load(f)
 
@@ -162,5 +156,4 @@ def test_user_query2_cypher():
     llm_output = runnable.invoke({"user_question": llm_input})
 
     print("cypher query: ", llm_output)
-
     print(graph.query(llm_output.content))
