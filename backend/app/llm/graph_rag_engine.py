@@ -23,6 +23,8 @@ class GraphRAGEngine:
         self.llm = llm
 
     def retrieve_context(self, msg: str):
+        print("text2cypher_prompt: ", self.text2cypher_prompt)
+        print("llm: ", self.llm)
         _text2cypher_runnable = self.text2cypher_prompt | self.llm
         query_cypher = _text2cypher_runnable.invoke({"user_question": msg})
         if "NO_CYPHER" in query_cypher.content:
@@ -32,6 +34,5 @@ class GraphRAGEngine:
     def generate_answer(self, msg: str, callback: Optional[Callable] = None):
         context = self.retrieve_context(msg)
         filled_prompt = self.qa_prompt.format_messages(msg=msg, context=context)
-        print("filled_prompt: ", filled_prompt)
         for chunk in self.llm.stream(filled_prompt):
             yield chunk.content
