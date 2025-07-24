@@ -62,8 +62,6 @@ def run_graph_resume_pipeline(
     )
     graph_documents_filtered = graph_db_writer.convert_text_to_graph(llm_input_lines)
     graph_db_writer.save(graph_documents_filtered)
-    print("그래프 결과")
-    print(graph.query("MATCH (n) RETURN n"))
 
 
 if __name__ == "__main__":
