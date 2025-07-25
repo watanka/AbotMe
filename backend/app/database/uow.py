@@ -1,5 +1,6 @@
 from app.database.repositories.answer_repository import AnswerRepository
 from app.database.repositories.chunk_repository import ChunkRepository
+from app.database.repositories.chunkgroup_repository import ChunkGroupRepository
 from app.database.repositories.question_repository import QuestionRepository
 from app.database.repositories.resume_repository import ResumeRepository
 from app.database.repositories.tag_repository import TagRepository
@@ -14,6 +15,7 @@ class UnitOfWork:
         self.chunks: ChunkRepository = None
         self.answers: AnswerRepository = None
         self.tags: TagRepository = None
+        self.chunk_groups: ChunkGroupRepository = None
 
     def __enter__(self):
         self.session = get_session()
@@ -22,6 +24,7 @@ class UnitOfWork:
         self.chunks = ChunkRepository(self.session)
         self.answers = AnswerRepository(self.session)
         self.tags = TagRepository(self.session)
+        self.chunk_groups = ChunkGroupRepository(self.session)
         return self
 
     def __exit__(self, *args):

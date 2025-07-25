@@ -63,7 +63,7 @@ export default function ChatBot({ onMetadata }) {
     setMessages(msgs => [...msgs, botMsg]);
 
     try {
-      const res = await fetch(`${process.env.REACT_APP_API_URL}/chat`, {
+      const res = await fetch(`${process.env.REACT_APP_API_URL}/chat/graph`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ message: input })

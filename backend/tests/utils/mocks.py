@@ -1,6 +1,5 @@
 from unittest.mock import MagicMock
 
-from app.llm.llm_client.base import LLMClient
 from app.llm.rag_engine import RAGEngine
 from app.llm.vector_store.chroma import ChromaVectorStore
 
@@ -11,8 +10,8 @@ class UserMessageMetadata:
         self.metadata = {}
 
 
-class MockLLMClient(LLMClient):
-    def generate(self, prompt: str, **kwargs) -> str:
+class MockLLM:
+    def stream(self, prompt: str, **kwargs) -> str:
         response = "MOCK LLM RESPONSE"
         for chunk in response:
             yield chunk
@@ -61,8 +60,22 @@ class UserMockMessageHandler:
         return UserMessageMetadata(content=message)
 
 
-def get_mock_llm_client():
-    return MockLLMClient()
+class MockUnitOfWork:
+    def __init__(self):
+        self.chunk_groups = MagicMock()
+        self.chunk_groups.get_by_id = MagicMock(return_value=None)
+        self.chunks = MagicMock()
+        self.chunks.get_by_chunk_group_id = MagicMock(return_value=[])
+
+    def __enter__(self):
+        return self
+
+    def __exit__(self, exc_type, exc_val, exc_tb):
+        pass
+
+
+def get_mock_llm():
+    return MockLLM()
 
 
 def get_mock_user_message_handler():
@@ -73,11 +86,13 @@ def get_mock_vector_store():
     return MockVectorStore()
 
 
-def get_mock_rag_engine(
-    vector_store=get_mock_vector_store(), llm_client=get_mock_llm_client()
-):
+def get_mock_rag_engine(vector_store=get_mock_vector_store(), llm=get_mock_llm()):
     mock_prompt = MagicMock()
     mock_prompt.format_messages = MagicMock(
         return_value=[{"content": "MOCK LLM RESPONSE"}]
     )
-    return RAGEngine(vector_store, prompt=mock_prompt, llm_client=llm_client)
+    return RAGEngine(vector_store, prompt=mock_prompt, llm=llm)
+
+
+def get_mock_uow():
+    return MockUnitOfWork()
