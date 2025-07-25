@@ -150,7 +150,6 @@ export default function ResumeViewer({ pdfUrl, highlights }) {
     return (
         <>
             <section className="w-full max-w-3xl mx-auto bg-white rounded-2xl shadow-2xl flex flex-col items-center p-6 border border-gray-200 mt-10">
-                <h2 className="text-xl font-semibold tracking-tight text-slate-700 mb-2 mt-4 sm:mt-0">이력서 미리보기</h2>
                 <div className="relative flex flex-col items-center w-full">
                     <div className="flex-1 flex justify-center items-center w-full min-h-[420px]">
                         <PdfDocument

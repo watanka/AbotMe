@@ -11,9 +11,10 @@ load_dotenv()
 
 @pytest.fixture(scope="session")
 def sample_pdf_paths():
-    base_dir = os.path.join(os.path.dirname(__file__), "sample-pdf")
+    base_dir = os.path.join(os.path.dirname(__file__), "resume")
     pdf_files = glob.glob(os.path.join(base_dir, "*.pdf"))
-    return pdf_files
+
+    return [fname for fname in pdf_files if "error" not in fname]
 
 
 def pytest_configure():

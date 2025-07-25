@@ -1,6 +1,6 @@
-from fastapi import APIRouter
 from app.models.schemas import FAQ
 from app.services.faq_service import get_faqs
+from fastapi import APIRouter
 
 router = APIRouter()
 

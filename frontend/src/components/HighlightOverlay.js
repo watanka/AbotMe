@@ -43,7 +43,7 @@ export default function HighlightOverlay({ highlights, pageWidth, pageHeight, pd
                             boxSizing: "border-box",
                             zIndex: 10
                         }}
-                        title={hl.name || hl.tags}
+                    // title={hl.name || hl.tags}
                     />
                 );
             })}

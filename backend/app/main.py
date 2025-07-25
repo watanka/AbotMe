@@ -1,11 +1,10 @@
-from fastapi import FastAPI
-
 from app.middleware.cors import setup_cors
-from app.routers import chat, faq, history, vector_store, resume, token
+from app.routers import chat, faq, history, resume, token, vector_store
+from fastapi import FastAPI
 
 
 def create_app():
-    app = FastAPI()
+    app = FastAPI(redirect_slashes=False)
 
     setup_cors(app)
 
@@ -26,8 +25,3 @@ def create_app():
 
 
 app = create_app()
-
-
-@app.get("/")
-def root():
-    return {"message": "AbotMe 백엔드에 오신 것을 환영합니다!"}

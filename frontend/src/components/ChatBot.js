@@ -63,7 +63,7 @@ export default function ChatBot({ onMetadata }) {
     setMessages(msgs => [...msgs, botMsg]);
 
     try {
-      const res = await fetch(`${process.env.REACT_APP_API_URL}/chat`, {
+      const res = await fetch(`${process.env.REACT_APP_API_URL}/chat/graph/`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ message: input })
@@ -104,9 +104,6 @@ export default function ChatBot({ onMetadata }) {
             ]);
           }
         }
-      }
-      if (metadata) {
-        console.log("[메타데이터]", metadata);
       }
     } catch (e) {
       setMessages(prev => [
@@ -166,22 +163,35 @@ export default function ChatBot({ onMetadata }) {
             </button>
           </div>
           <div className="flex-1 overflow-y-auto px-4 py-2" style={{ height: `calc(${panelHeight - 140}px)` }}>
-            {messages.map((msg, i) => (
-              <div
-                key={i}
-                className={`flex ${msg.role === "user" ? "justify-end" : "justify-start"} mb-2`}
-              >
+            {messages.map((msg, i) => {
+              const isLast = i === messages.length - 1;
+              const isBot = msg.role === "bot";
+              const showLoadingDots = isLast && isBot && loading && !msg.content;
+              return (
                 <div
-                  className={`px-3 py-2 rounded-xl max-w-[85%] text-sm break-words shadow-sm "
-                    ${msg.role === "user"
-                      ? "bg-primary text-black"
-                      : "bg-gray-100 text-gray-700"}
-                  `}
+                  key={i}
+                  className={`flex ${msg.role === "user" ? "justify-end" : "justify-start"} mb-2`}
                 >
-                  {msg.content}
+                  <div
+                    className={`px-3 py-2 rounded-xl max-w-[85%] text-sm break-words shadow-sm
+                      ${msg.role === "user"
+                        ? "bg-primary text-black"
+                        : "bg-gray-100 text-gray-700"}
+                    `}
+                  >
+                    {showLoadingDots ? (
+                      <span className="flex gap-1 items-center h-5">
+                        <span className="w-2 h-2 bg-gray-400 rounded-full animate-bounce [animation-delay:-0.3s]"></span>
+                        <span className="w-2 h-2 bg-gray-400 rounded-full animate-bounce [animation-delay:-0.15s]"></span>
+                        <span className="w-2 h-2 bg-gray-400 rounded-full animate-bounce"></span>
+                      </span>
+                    ) : (
+                      msg.content
+                    )}
+                  </div>
                 </div>
-              </div>
-            ))}
+              );
+            })}
             <div ref={messagesEndRef} />
           </div>
           <form

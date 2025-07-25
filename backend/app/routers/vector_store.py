@@ -1,12 +1,13 @@
-from fastapi import APIRouter, UploadFile, File
-from app.services.data_service import run_resume_pipeline
-from app.data_pipeline.utils import save_binary_to_file
 import os
+
+from app.data_pipeline.utils import save_binary_to_file
+from app.services.data_service import run_resume_pipeline
+from fastapi import APIRouter, File, UploadFile
 
 router = APIRouter()
 
 
-@router.post("/pdf")
+@router.post("/pdf/")
 def pdf_to_vector_store(pdf: UploadFile = File(...)):
     """
     PDF 파일을 벡터 스토어에 업데이트합니다.
