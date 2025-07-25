@@ -16,12 +16,12 @@ def create_app():
     )
     app.include_router(resume.router, prefix="/resume", tags=["resume"])
     app.include_router(token.router, prefix="/token", tags=["token"])
+
+    @app.get("/")
+    def root():
+        return {"message": "AbotMe 백엔드에 오신 것을 환영합니다!"}
+
     return app
 
 
 app = create_app()
-
-
-@app.get("/")
-def root():
-    return {"message": "AbotMe 백엔드에 오신 것을 환영합니다!"}
