@@ -6,10 +6,9 @@ from app.database.models.answer import Answer
 from app.database.models.question import Question
 from app.database.models.resume import Resume
 from app.database.uow import UnitOfWork
-from app.dependencies import get_llm, get_qna_service, get_uow, get_graph_db
-from app.services.data_service import run_graph_resume_pipeline, run_resume_pipeline
+from app.dependencies import get_graph_db, get_llm, get_qna_service, get_uow
 from app.llm.graph_rag_engine import GraphRAGEngine
-from langchain_neo4j import Neo4jGraph
+from app.services.data_service import run_graph_resume_pipeline, run_resume_pipeline
 
 # 기존 서비스 함수 재사용
 from app.services.mappers import (
@@ -19,6 +18,7 @@ from app.services.mappers import (
 )
 from app.services.qna_service import QnAService
 from fastapi import APIRouter, Depends, File, Form, HTTPException, UploadFile
+from langchain_neo4j import Neo4jGraph
 
 router = APIRouter()
 
@@ -90,21 +90,21 @@ def generate_questions(
     return {"questions": questions}
 
 
-@router.get("/questions")
+@router.get("/questions/")
 def get_questions(uow: UnitOfWork = Depends(get_uow)):
     with uow:
         questions: List[Question] = uow.questions.get_all()
         return [convert_question_dbmodel_to_pydantic(q) for q in questions]
 
 
-@router.get("/questions/{question_id}")
+@router.get("/questions/{question_id}/")
 def get_question(question_id: str, uow: UnitOfWork = Depends(get_uow)):
     with uow:
         question: Question = uow.questions.get_by_id(question_id)
     return convert_question_dbmodel_to_pydantic(question)
 
 
-@router.get("/answers/{question_id}")
+@router.get("/answers/{question_id}/")
 def get_answer(question_id: str, uow: UnitOfWork = Depends(get_uow)):
     with uow:
         answer: Answer = uow.answers.get_by_id(question_id)
@@ -112,7 +112,7 @@ def get_answer(question_id: str, uow: UnitOfWork = Depends(get_uow)):
 
 
 # 4. 답변 저장 (질문별 1대1, edit_token 필요)
-@router.post("/questions/{question_id}/answer")
+@router.post("/questions/{question_id}/answer/")
 def save_answer(
     question_id: str,
     answer: str = Form(...),

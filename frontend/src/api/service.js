@@ -7,7 +7,7 @@ export const qnaAPI = {
     // 질문 목록 불러오기
     getQuestions: async () => {
         try {
-            const response = await axios.get(`${API_URL}/resume/questions`);
+            const response = await axios.get(`${API_URL}/resume/questions/`);
             return response.data.questions || response.data;
         } catch (error) {
             console.error('QnA getQuestions Error:', error);
@@ -21,7 +21,7 @@ export const qnaAPI = {
             const formData = new FormData();
             formData.append('answer', answerText);
             const response = await axios.post(
-                `${API_URL}/resume/questions/${questionId}/answer`,
+                `${API_URL}/resume/questions/${questionId}/answer/`,
                 formData,
                 { headers: { 'Content-Type': 'multipart/form-data' } }
             );
@@ -36,7 +36,7 @@ export const qnaAPI = {
     getAnswer: async (questionId) => {
         try {
             const response = await axios.get(
-                `${API_URL}/resume/questions/${questionId}/answer`
+                `${API_URL}/resume/questions/${questionId}/answer/`
             );
             return response.data;
         } catch (error) {
@@ -96,7 +96,7 @@ export const chatAPI = {
 export const resumeAPI = {
     upload: async (formData) => {
         try {
-            const response = await axios.post(`${API_URL}/resume`, formData, {
+            const response = await axios.post(`${API_URL}/resume/`, formData, {
                 headers: { 'Content-Type': 'multipart/form-data' }
             });
             return response.data;
@@ -108,7 +108,7 @@ export const resumeAPI = {
 
     getResume: async () => {
         try {
-            const response = await axios.get(`${API_URL}/resume`);
+            const response = await axios.get(`${API_URL}/resume/`);
             return response.data;
         } catch (error) {
             console.error('Error:', error);
@@ -118,7 +118,7 @@ export const resumeAPI = {
 
     generateQuestions: async () => {
         try {
-            const response = await axios.post(`${API_URL}/resume/generate-questions`);
+            const response = await axios.post(`${API_URL}/resume/generate-questions/`);
             return response.data;
         } catch (error) {
             console.error('Error:', error);
@@ -128,7 +128,7 @@ export const resumeAPI = {
 
     getAnswer: async (id) => {
         try {
-            const response = await axios.get(`${API_URL}/resume/answers/${id}`);
+            const response = await axios.get(`${API_URL}/resume/answers/${id}/`);
             return response.data;
         } catch (error) {
             console.error('Error:', error);
@@ -138,7 +138,7 @@ export const resumeAPI = {
 
     saveAnswer: async (id, answer) => {
         try {
-            const response = await axios.post(`${API_URL}/resume/questions/${id}/answer`, {
+            const response = await axios.post(`${API_URL}/resume/questions/${id}/answer/`, {
                 answer
             });
             return response.data;
@@ -153,7 +153,7 @@ export const resumeAPI = {
 export const tokenAPI = {
     verify: async (token) => {
         try {
-            const response = await axios.post(`${API_URL}/token/verify`, { token });
+            const response = await axios.post(`${API_URL}/token/verify/`, { token });
             return response.data;
         } catch (error) {
             console.error('Token verify error:', error);
