@@ -60,6 +60,20 @@ class UserMockMessageHandler:
         return UserMessageMetadata(content=message)
 
 
+class MockUnitOfWork:
+    def __init__(self):
+        self.chunk_groups = MagicMock()
+        self.chunk_groups.get_by_id = MagicMock(return_value=None)
+        self.chunks = MagicMock()
+        self.chunks.get_by_chunk_group_id = MagicMock(return_value=[])
+
+    def __enter__(self):
+        return self
+
+    def __exit__(self, exc_type, exc_val, exc_tb):
+        pass
+
+
 def get_mock_llm():
     return MockLLM()
 
@@ -78,3 +92,7 @@ def get_mock_rag_engine(vector_store=get_mock_vector_store(), llm=get_mock_llm()
         return_value=[{"content": "MOCK LLM RESPONSE"}]
     )
     return RAGEngine(vector_store, prompt=mock_prompt, llm=llm)
+
+
+def get_mock_uow():
+    return MockUnitOfWork()
