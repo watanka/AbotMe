@@ -1,7 +1,6 @@
 from app.middleware.cors import setup_cors
 from app.routers import chat, faq, history, resume, token, vector_store
 from fastapi import FastAPI
-from fastapi.middleware.proxy_headers import ProxyHeadersMiddleware
 
 
 def create_app():
@@ -17,7 +16,6 @@ def create_app():
     )
     app.include_router(resume.router, prefix="/resume", tags=["resume"])
     app.include_router(token.router, prefix="/token", tags=["token"])
-    app.add_middleware(ProxyHeadersMiddleware)
     return app
 
 
