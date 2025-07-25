@@ -1,16 +1,14 @@
 import json
 import os
-import pytest
-from langchain_neo4j import Neo4jGraph
-from dotenv import load_dotenv
-from langchain_core.prompts import ChatPromptTemplate
-from langfuse import get_client
 
+import pytest
+from dotenv import load_dotenv
+from langchain_core.documents import Document
+from langchain_core.prompts import ChatPromptTemplate
 from langchain_experimental.graph_transformers import LLMGraphTransformer
 from langchain_google_genai import ChatGoogleGenerativeAI
-from langchain_core.documents import Document
-
-
+from langchain_neo4j import Neo4jGraph
+from langfuse import get_client
 
 llm = ChatGoogleGenerativeAI(
     model="gemini-2.0-flash-exp",
@@ -20,6 +18,7 @@ llm = ChatGoogleGenerativeAI(
 llm_transformer = LLMGraphTransformer(llm=llm)
 graph = Neo4jGraph(refresh_schema=False)
 
+
 @pytest.mark.skip
 def test_save_chunks_to_neo4j():
     # extractor = PDFResumeMetadataExtractor()
@@ -27,7 +26,7 @@ def test_save_chunks_to_neo4j():
 
     # meta_list = extractor.extract("./tests/resume/eunsungshin-ml.pdf")
     # chunk_groups = chunker.chunk(meta_list)
-    
+
     with open("./tests/chunk_results/eunsung_안성희 이력서.json", "r") as f:
         chunk_groups = json.load(f)
 
@@ -141,6 +140,7 @@ def test_save_chunks_to_neo4j():
     print(f"Relationships:{graph_documents_filtered[0].relationships}")
 
     graph.add_graph_documents(graph_documents_filtered, include_source=True)
+
 
 @pytest.mark.skip("실제 llm 사용")
 def test_user_query2_cypher():
