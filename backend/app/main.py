@@ -1,5 +1,5 @@
 from app.middleware.cors import setup_cors
-from app.routers import chat, faq, history, resume, token, vector_store
+from app.routers import chat, faq, history, pdf, resume, token, vector_store
 from fastapi import FastAPI
 
 
@@ -16,6 +16,7 @@ def create_app():
     )
     app.include_router(resume.router, prefix="/resume", tags=["resume"])
     app.include_router(token.router, prefix="/token", tags=["token"])
+    app.include_router(pdf.router, prefix="/pdf", tags=["pdf"])
 
     @app.get("/")
     def root():

@@ -103,7 +103,10 @@ function ErrorBanner({ message }) {
 // ResumeViewer 컨테이너
 export default function ResumeViewer({ pdfUrl, highlights }) {
     // Ensure PDF URL is properly prefixed with PUBLIC_URL
-    const resolvedPdfUrl = `${process.env.PUBLIC_URL}/${pdfUrl}`;
+    if (!pdfUrl) {
+        return null;
+    }
+    const resolvedPdfUrl = `${process.env.REACT_APP_API_URL}/pdf/?fname=${pdfUrl.split('/').pop()}`;
     // 상수 및 상태
     const maxWidth = PAGE_MAX_WIDTH;
     const minWidth = PAGE_MIN_WIDTH;
@@ -131,6 +134,7 @@ export default function ResumeViewer({ pdfUrl, highlights }) {
         setError(null);
     }, []);
     const onDocumentLoadError = useCallback((err) => {
+        console.error('PDF Load Error:', err);
         setError(err?.message || "PDF 로드 실패");
     }, []);
 

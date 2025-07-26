@@ -6,6 +6,7 @@ from app.data_pipeline.extract import PDFResumeMetadataExtractor
 from app.data_pipeline.prompts import resume_prompt
 from langchain_google_genai import ChatGoogleGenerativeAI
 
+
 @pytest.mark.skip(reason="실제 llm 사용")
 def test_chunking(sample_pdf_paths):
     llm = ChatGoogleGenerativeAI(

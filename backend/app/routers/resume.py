@@ -1,3 +1,4 @@
+import os
 import uuid
 from datetime import datetime
 from typing import List
@@ -20,6 +21,7 @@ from app.services.qna_service import QnAService
 from fastapi import APIRouter, Depends, File, Form, HTTPException, UploadFile
 from langchain_neo4j import Neo4jGraph
 
+ASSETS_DIR = os.getenv("ASSETS_DIR", "./assets")
 router = APIRouter()
 
 # In-memory storage 예시 (실 서비스에서는 DB/파일시스템/벡터스토어 등으로 대체)
@@ -44,22 +46,26 @@ def upload_resume(
 ):
     # 실제 구현 시: 파일 저장, id/토큰 생성, DB 저장 등
     # TODO: 파일 저장 경로 수정
-    save_path = f"/home/silver/workspace/AbotMe/frontend/public/{name}_{file.filename}"
+    save_path = f"{ASSETS_DIR}/{name}_{file.filename}"
     with open(save_path, "wb") as f:
         f.write(file.file.read())
     # 벡터스토어 저장 (기존 파이프라인 활용)
     # run_resume_pipeline(save_path)
-    resume = Resume(resume_id=uuid.uuid4(), name=name, email=email, pdf_url=save_path)
+    resume = Resume(
+        resume_id=uuid.uuid4(),
+        name=name,
+        email=email,
+        pdf_url=os.path.basename(save_path),
+    )
     with uow:
         uow.resumes.add(resume)
         uow.commit()
         questions = qna_service.generate_questions(resume)
-    public_url = f"/{name}_{file.filename}"
 
     # TODO: 비동기, 모듈화
 
     run_graph_resume_pipeline(llm, save_path, graph_db)
-    return {"public_url": public_url}
+    return {"public_url": os.path.basename(save_path)}
 
 
 # 2. 이력서/질문/답변 데이터 조회 (공개)
