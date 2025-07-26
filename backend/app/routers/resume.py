@@ -55,7 +55,7 @@ def upload_resume(
         resume_id=uuid.uuid4(),
         name=name,
         email=email,
-        pdf_url=os.path.basename(save_path),
+        pdf_url=save_path,
     )
     with uow:
         uow.resumes.add(resume)
