@@ -1,4 +1,4 @@
-# LLM 기반 이력서 어플리케이션 설계서 (2025-07-10 최신)
+# LLM 기반 이력서 어플리케이션 설계서 (2025-07-27 최신)
 
 ## 1. 서비스 목적
 - 채용담당자가 이력서에서 확인하기 어려운 기술적/개인적 정보를 LLM 기반 질문과 답변을 통해 심층적으로 탐색할 수 있도록 지원
@@ -23,10 +23,55 @@
 
 ## 4. API 엔드포인트 요약
 
+
 | Method | Endpoint | 권한 | 설명 |
 |--------|----------|------|------|
-| POST   | /resume | (최초) | 이력서 업로드/등록 |
-| GET    | /resume | 전체 | 이력서/질문/답변 데이터 조회 |
+| POST   | /resume/ | 전체 | 이력서 업로드/등록 (PDF, 이름, 이메일) |
+| GET    | /resume/ | 전체 | 이력서 조회 |
+| POST   | /resume/generate-questions | 관리자 | 이력서 기반 질문 생성 |
+| GET    | /resume/questions/ | 전체 | 질문 리스트 조회 |
+| GET    | /resume/questions/{question_id}/ | 전체 | 질문 조회 |
+| POST   | /resume/questions/{question_id}/answer/ | 관리자 | 답변 저장(1대1, edit_token 필요) |
+| GET    | /resume/answers/{question_id}/ | 전체 | 답변 조회 |
+| POST   | /chat/ | 전체 | 챗봇 대화 (Resume 기반 RAG) |
+| POST   | /chat/graph/ | 전체 | 그래프 기반 챗봇 대화 |
+| GET    | /faq/ | 전체 | FAQ 리스트 조회 |
+| GET    | /history/{session_id}/ | 전체 | 세션별 대화 히스토리 조회 |
+| POST   | /vector-store/pdf/ | 관리자 | PDF를 벡터스토어로 변환 (임시 업로드)
+| POST   | /token/verify/ | 전체 | edit_token 유효성 검사 |
+| GET    | /pdf/?fname= | 전체 | PDF 파일 프론트엔드 전송용 |
+---
+
+### 주요 엔드포인트 상세 (prefix 기준)
+
+- **/resume/**
+  - `POST /resume/` : 이력서 업로드 (PDF, 이름, 이메일)
+  - `GET /resume/` : 최신 이력서/질문/답변 조회
+  - `POST /resume/generate-questions` : 질문 자동 생성 (관리자)
+  - `GET /resume/questions/` : 전체 질문 리스트
+  - `GET /resume/questions/{question_id}/` : 단일 질문 조회
+  - `POST /resume/questions/{question_id}/answer/` : 답변 저장 (edit_token 필요)
+  - `GET /resume/answers/{question_id}/` : 단일 답변 조회
+
+- **/chat/**
+  - `POST /chat/` : 일반 챗봇 대화
+  - `POST /chat/graph/` : 그래프 기반 챗봇 대화
+
+- **/faq/**
+  - `GET /faq/` : FAQ 리스트
+
+- **/history/**
+  - `GET /history/{session_id}/` : 세션별 대화 기록
+
+- **/vector-store/**
+  - `POST /vector-store/pdf/` : PDF → 벡터스토어 변환 (임시 업로드)
+
+- **/token/**
+  - `POST /token/verify/` : edit_token 유효성 검사
+
+- **/pdf/**
+  - `GET /pdf/?fname=` : PDF 파일 다운로드/미리보기 (GCS)
+
 | POST   | /resume/generate-questions | 관리자 | 질문 자동 생성 |
 | GET    | /resume/questions/{question_id} | 관리자 | 단일 질문 조회 |
 | POST   | /resume/questions/{question_id}/answer | 관리자 | 답변 저장(1대1) |
@@ -43,39 +88,17 @@
 
 ---
 
-## 6. 기술 스택 및 시스템 아키텍처
-### 프론트엔드
-- React + TypeScript
-- TailwindCSS, shadcn/ui
-- GitHub Pages (정적 배포)
 
-### 백엔드
-- FastAPI (Python 3.12+)
-- uv (Python 라이브러리 관리)
-- GCP run (배포)
-
-### LLM/DB
-- Langchain
-- ChromaDB (Vector DB)
-- SQLite (메타데이터 저장)
-
-### 인프라
-- GCP run (백엔드 배포)
-- GitHub Pages (프론트엔드 배포)
-- GitHub Actions
-
-### 기타
-- GitHub Actions (CI/CD)
-- PDF.js (프론트 PDF 렌더링)
-
----
-
-## 7. 프로젝트 구조
+## 6. 프로젝트 구조
 ```
 AbotMe/
 ├── backend/           # FastAPI 백엔드
 │   ├── app/          # 애플리케이션 코드
 │   │   ├── main.py   # FastAPI 앱
+│   │   ├── dependencies.py   # 의존성 관리
+│   │   ├── data_pipeline/  # 데이터 파이프라인
+│   │   ├── database/  # 데이터베이스 관련 코드
+│   │   ├── llm/  # LLM 관련 코드
 │   │   ├── routers/  # API 라우터
 │   │   ├── models/   # 데이터 모델
 │   │   └── services/ # 비즈니스 로직
@@ -84,6 +107,10 @@ AbotMe/
 │   └── requirements.txt
 ├── frontend/         # React 프론트엔드
 │   ├── src/         # 소스 코드
+│   │   ├── App.js # 애플리케이션
+│   │   ├── api/  # API 호출
+│   │   ├── components/  # 컴포넌트
+│   │   └── pages/  # 페이지
 │   ├── public/      # 정적 파일
 │   └── package.json
 ├── docs/             # 문서
@@ -95,115 +122,39 @@ AbotMe/
 ---
 
 ## 8. 데이터 흐름
-```mermaid
-sequenceDiagram
-    participant ChatUser
-    participant FastAPI
-    participant VectorDB
-    participant LLM
-    ChatUser->>FastAPI: 질문 전송
-    FastAPI->>VectorDB: 유사도 검색
-    VectorDB-->>FastAPI: 관련 문서 반환
-    FastAPI->>LLM: 프롬프트 생성 및 전송
-    LLM-->>FastAPI: 답변 생성
-    FastAPI-->>ChatUser: 답변 전송
-```
+
+### 1) 이력서 업로드 프로세스
+
+| 단계 | 설명 |
+|------|------|
+| 1    | 사용자가 이력서(PDF) 업로드 및 기본 정보 입력 |
+| 2    | 서버에서 PDF 정보 추출 (텍스트, 메타데이터 등) |
+| 3    | LLMGraphTransformer를 사용해 이력서 정보를 그래프 데이터로 변환 및 저장 |
+
+- **요약 순서**
+  1. 이력서 업로드 및 정보 입력
+  2. PDF 정보 추출
+  3. LLMGraphTransformer로 그래프화
 
 ---
 
-## 9. 배포/운영 전략
-- **프론트엔드**: GitHub Pages (정적 사이트)
-- **백엔드**: GCP cloud run
-- **개발**: 로컬 환경
-- GitHub Actions 통한 CI/CD 자동화
+### 2) 챗봇 질의 프로세스
 
----
+| 단계 | 설명 |
+|------|------|
+| 1    | 사용자가 챗봇에 질문 입력 |
+| 2    | 질문을 그래프 쿼리로 변환 |
+| 3    | 그래프 쿼리 결과를 RAG 프롬프트의 컨텍스트로 제공 |
+| 4    | LLM이 답변 생성 및 반환 |
 
-## 10. UI/UX/컴포넌트 설계 포인트
-- 모든 SVG/와이어프레임은 Figma, VSCode, 브라우저 등에서 확인 가능
-- Tailwind CSS, shadcn/ui 스타일 기반 컴포넌트 구현 권장
-- PDF.js 등과 연동 시 하이라이트는 줄 단위 overlay로 구현
-- 업로드/질문/답변 등은 Dialog, Stepper 등으로 모달 처리
-- 이력서 뷰어와 챗봇은 항상 메인 페이지에 노출
-- 업로드/수정/답변 UI는 관리자 URL에서만 노출
+- **요약 순서**
+  1. 질문 입력
+  2. 질문 → 그래프 쿼리 변환
+  3. 그래프 쿼리 결과를 RAG 프롬프트에 포함
+  4. LLM이 답변 생성
 
----
 
-## 11. 보안 고려사항
-1. 입력 검증: XSS, SQL Injection, LLM 안전성 검사
-2. API 보안: Rate limiting, API 키, CORS
-3. 데이터 보안: 민감 정보 암호화, 로그 관리, 접근 제어
-
----
-
-## 12. 모니터링 및 로깅
+## 9. 모니터링 및 로깅
 - Langfuse 등으로 사용자 행동 모니터링
 - 질문 패턴, 자주 사용 기능, 오류 발생 패턴 등 분석
-
-
-## 1. 시스템 아키텍처
-```mermaid
-graph TD
-    A[React] --> B[FastAPI 서버]
-    B --> C[LLM 엔진]
-    B --> D[Vector DB]
-    D --> E[내 정보 저장소]
-    
-    subgraph 외부 서비스
-        F[Github]
-        G[LinkedIn]
-        H[블로그]
-    end
-    
-    F --> E
-    G --> E
-    H --> E
-    
-    subgraph 배포 환경
-        I[GitHub Pages]
-        J[GCP run]
-    end
-    
-    I --> A
-    J --> B
-```
-
-
-
-## 4. 프로젝트 구조
-```
-AbotMe/
-├── backend/           # FastAPI 백엔드
-│   ├── app/          # 애플리케이션 코드
-│   │   ├── main.py   # FastAPI 앱
-│   │   ├── routers/  # API 라우터
-│   │   ├── models/   # 데이터 모델
-│   │   ├── data_pipelines/ # 벡터 스토어 데이터 파이프라인
-│   │   └── services/ # 비즈니스 로직
-│   ├── tests/        # 테스트 코드
-│   ├── .venv/        # 가상환경
-│   └── requirements.txt
-├── frontend/         # React 프론트엔드
-│   ├── src/         # 소스 코드
-│   ├── public/      # 정적 파일
-│   └── package.json
-├── docs/             # 문서
-├── .github/          # GitHub Actions
-├── Makefile          # 개발 프로세스 자동화
-└── docker-compose.yml
-```
-
-## 5. 개발 프로세스
-### 코드 품질 관리
-```mermaid
-graph TD
-    A[코드 작성] --> B[make format]
-    B --> C[make lint]
-    C --> D[make test]
-    D --> E[make check]
-    E --> F[커밋]
-    F --> G[GitHub Actions]
-    G --> H[자동 테스트/빌드/배포]
-```
-
 
