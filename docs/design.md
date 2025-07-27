@@ -8,16 +8,26 @@
 ![AbotMe 프로세스](images/abme_process.svg)
 
 - **이력서 업로드**: PDF drag & drop, 이름/이메일 입력
-- **질문 생성/답변**: LLM 기반 자동 질문 생성, 질문별 답변/저장, 미입력 시 워닝
+- **질문 생성/답변**: LLM 기반 자동 질문 생성, 질문별 답변/저장
 - **이력서 보기 & 챗봇**: PDF 전체 렌더링, 챗봇, 질문 관련 하이라이트
 
 ---
 
 ## 3. 주요 화면 와이어프레임
 
-- **이력서 업로드**: [frontend_wireframe_upload.svg](images/frontend_wireframe_upload.svg)
-- **질문 생성/답변**: [frontend_wireframe_questions.svg](images/frontend_wireframe_questions.svg)
-- **이력서+챗봇**: [frontend_wireframe_resume_chat.svg](images/frontend_wireframe_resume_chat.svg)
+- **이력서 업로드**
+<svg>
+<img src="images/frontend_wireframe_upload.svg" alt="이력서 업로드" />
+</svg>
+- **질문 생성/답변**
+<svg>
+<img src="images/frontend_wireframe_questions.png" alt="질문 생성/답변" />
+</svg>
+
+- **이력서+챗봇**
+<svg>
+<img src="images/frontend_wireframe_resume_chat.svg" alt="이력서+챗봇" />
+</svg>
 
 ---
 
@@ -39,45 +49,10 @@
 | GET    | /history/{session_id}/ | 전체 | 세션별 대화 히스토리 조회 |
 | POST   | /vector-store/pdf/ | 관리자 | PDF를 벡터스토어로 변환 (임시 업로드)
 | POST   | /token/verify/ | 전체 | edit_token 유효성 검사 |
-| GET    | /pdf/?fname= | 전체 | PDF 파일 프론트엔드 전송용 |
----
-
-### 주요 엔드포인트 상세 (prefix 기준)
-
-- **/resume/**
-  - `POST /resume/` : 이력서 업로드 (PDF, 이름, 이메일)
-  - `GET /resume/` : 최신 이력서/질문/답변 조회
-  - `POST /resume/generate-questions` : 질문 자동 생성 (관리자)
-  - `GET /resume/questions/` : 전체 질문 리스트
-  - `GET /resume/questions/{question_id}/` : 단일 질문 조회
-  - `POST /resume/questions/{question_id}/answer/` : 답변 저장 (edit_token 필요)
-  - `GET /resume/answers/{question_id}/` : 단일 답변 조회
-
-- **/chat/**
-  - `POST /chat/` : 일반 챗봇 대화
-  - `POST /chat/graph/` : 그래프 기반 챗봇 대화
-
-- **/faq/**
-  - `GET /faq/` : FAQ 리스트
-
-- **/history/**
-  - `GET /history/{session_id}/` : 세션별 대화 기록
-
-- **/vector-store/**
-  - `POST /vector-store/pdf/` : PDF → 벡터스토어 변환 (임시 업로드)
-
-- **/token/**
-  - `POST /token/verify/` : edit_token 유효성 검사
-
-- **/pdf/**
-  - `GET /pdf/?fname=` : PDF 파일 다운로드/미리보기 (GCS)
-
+| GET    | /pdf/?fname={fname} | 전체 | PDF 파일 프론트엔드 전송용 |
 | POST   | /resume/generate-questions | 관리자 | 질문 자동 생성 |
 | GET    | /resume/questions/{question_id} | 관리자 | 단일 질문 조회 |
 | POST   | /resume/questions/{question_id}/answer | 관리자 | 답변 저장(1대1) |
-| POST   | /resume/chat | 전체 | 챗봇 질의 |
-| GET    | /resume/{resume_id} | 전체 | 이력서/챗봇 데이터 조회 |
-| POST   | /resume/{resume_id}/chat | 전체 | 챗봇 질의 |
 
 ---
 
@@ -130,12 +105,6 @@ AbotMe/
 | 1    | 사용자가 이력서(PDF) 업로드 및 기본 정보 입력 |
 | 2    | 서버에서 PDF 정보 추출 (텍스트, 메타데이터 등) |
 | 3    | LLMGraphTransformer를 사용해 이력서 정보를 그래프 데이터로 변환 및 저장 |
-
-- **요약 순서**
-  1. 이력서 업로드 및 정보 입력
-  2. PDF 정보 추출
-  3. LLMGraphTransformer로 그래프화
-
 ---
 
 ### 2) 챗봇 질의 프로세스
@@ -146,12 +115,6 @@ AbotMe/
 | 2    | 질문을 그래프 쿼리로 변환 |
 | 3    | 그래프 쿼리 결과를 RAG 프롬프트의 컨텍스트로 제공 |
 | 4    | LLM이 답변 생성 및 반환 |
-
-- **요약 순서**
-  1. 질문 입력
-  2. 질문 → 그래프 쿼리 변환
-  3. 그래프 쿼리 결과를 RAG 프롬프트에 포함
-  4. LLM이 답변 생성
 
 
 ## 9. 모니터링 및 로깅
