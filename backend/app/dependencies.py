@@ -38,7 +38,7 @@ def get_llm():
     #     model_name="deepseek/deepseek-r1-0528-qwen3-8b:free",
     # )
     llm = ChatGoogleGenerativeAI(
-        model="gemini-2.0-flash-exp", api_key=os.getenv("GOOGLE_API_KEY")
+        model="gemini-2.5-flash", api_key=os.getenv("GOOGLE_API_KEY")
     )
 
     # llm = LangChainGeminiClient().llm
@@ -69,12 +69,14 @@ def get_rag_engine(
 def get_graph_rag_engine(
     graph_db: Neo4jGraph = Depends(get_graph_db),
     llm=Depends(get_llm),
+    uow=Depends(get_uow),
 ) -> GraphRAGEngine:
     return GraphRAGEngine(
         graph_db=graph_db,
         text2cypher_prompt=text2cypher_prompt,
         qa_prompt=chat_prompt,
         llm=llm,
+        uow=uow,
     )
 
 

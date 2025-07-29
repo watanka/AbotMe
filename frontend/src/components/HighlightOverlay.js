@@ -12,34 +12,39 @@ export default function HighlightOverlay({ highlights, pageWidth, pageHeight, pd
     if (!Array.isArray(highlights) || !pdfWidth || !pdfHeight) return null;
 
     // bbox 변환 함수
-    const scaleX = pageWidth / pdfWidth;
-    const scaleY = pageHeight / pdfHeight;
+    // const scaleX = pageWidth / pdfWidth;
+    // const scaleY = pageHeight / pdfHeight;
 
     return (
         <>
-            {highlights.map((hl, i) => {
-                const bbox = hl.bbox || hl; // 유연성
+            {highlights.map((bbox, i) => {
+                
                 if (
                     bbox == null ||
                     bbox.x0 == null || bbox.x1 == null || bbox.top == null || bbox.bottom == null
                 ) return null;
-                // 면적 확장 (15%)
-                const EXPAND = 0.15;
-                let left = bbox.x0 * scaleX;
-                let top = bbox.top * scaleY;
-                let width = (bbox.x1 - bbox.x0) * scaleX;
-                let height = (bbox.bottom - bbox.top) * scaleY;
-                left = left - width * EXPAND / 2;
-                top = top - height * EXPAND / 2;
-                width = width * (1 + EXPAND);
-                height = height * (1 + EXPAND);
+                // 면적 확장 (2%)
+                // PDF 원본 기준 정규화 bbox를 실제 렌더링 크기에 맞게 변환
+                console.log("bbox not filtered.")
+                const EXPAND = 0.02;
+                let left = bbox.x0 * pageWidth;
+                let top = bbox.top * pageHeight;
+                let width = (bbox.x1 - bbox.x0) * pageWidth;
+                let height = (bbox.bottom - bbox.top) * pageHeight;
+                // 2% 확장
+                left -= width * EXPAND / 2;
+                top -= height * EXPAND / 2;
+                width *= (1 + EXPAND);
+                height *= (1 + EXPAND);
+                // 디버깅용 로그 제거 또는 필요시 유지
+                console.log("left:", left, "top:", top, "width:", width, "height:", height);
                 return (
                     <div
                         key={i}
                         className="absolute pointer-events-none rounded-xl shadow transition-all duration-200"
                         style={{
                             left, top, width, height,
-                            backgroundColor: "rgba(255,255,80,0.45)",
+                            backgroundColor: "rgba(208, 208, 110, 0.45)",
                             boxSizing: "border-box",
                             zIndex: 10
                         }}

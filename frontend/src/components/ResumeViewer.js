@@ -3,7 +3,7 @@ import { Document, Page, pdfjs } from "react-pdf";
 pdfjs.GlobalWorkerOptions.workerSrc = `${process.env.PUBLIC_URL}/pdf.worker.min.js`;
 
 
-const PAGE_MAX_WIDTH = 600;
+const PAGE_MAX_WIDTH = 1000;
 const PAGE_MIN_WIDTH = 280;
 
 import HighlightOverlay from "./HighlightOverlay";
@@ -143,7 +143,7 @@ export default function ResumeViewer({ pdfUrl, highlights }) {
     const goToNextPage = () => setPageNumber((prev) => Math.min(prev + 1, numPages));
 
     // 반응형 페이지 너비
-    const pageWidth = Math.min(window.innerWidth - 48, maxWidth);
+    const pageWidth = Math.min(window.innerWidth - 24, maxWidth);
 
     // 현재 페이지의 하이라이트만 추출
     const pageHighlights = useMemo(() => {
@@ -153,7 +153,7 @@ export default function ResumeViewer({ pdfUrl, highlights }) {
 
     return (
         <>
-            <section className="w-full max-w-3xl mx-auto bg-white rounded-2xl shadow-2xl flex flex-col items-center p-6 border border-gray-200 mt-10">
+            <section className="w-full max-w-5xl mx-auto bg-white rounded-2xl shadow-2xl flex flex-col items-center p-4 border border-gray-200 mt-10">
                 <div className="relative flex flex-col items-center w-full">
                     <div className="flex-1 flex justify-center items-center w-full min-h-[420px]">
                         <PdfDocument

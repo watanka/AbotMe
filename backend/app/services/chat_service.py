@@ -1,13 +1,13 @@
 import json
 
-from app.llm.rag_engine import RAGEngine
+from app.database.uow import UnitOfWork
 from app.llm.graph_rag_engine import GraphRAGEngine
+from app.llm.rag_engine import RAGEngine
 from app.llm.user_message_handler import UserMessageHandler
 from app.models.schemas import ChatRequest, ChatResponse, HistoryItem
 from app.services.history_service import add_history
 from fastapi.responses import StreamingResponse
 from langfuse.langchain import CallbackHandler
-from app.database.uow import UnitOfWork
 
 langfuse_callback_handler = CallbackHandler()
 
@@ -125,14 +125,20 @@ def stream_graph_chat_response(
             )
         try:
             answer = []
-
+            context = graph_rag_engine.retrieve_context(request.message)
+            print("context: ", context)
+            if context == "NO_CYPHER" or context == "":
+                metadata = []
+            else:
+                metadata = graph_rag_engine.get_metadata(context)
+                print("metadata: ", metadata)
             # metadata 정보 기반 분기: 사용자 답변 and PDF 하이라이트
             for chunk in graph_rag_engine.generate_answer(
-                request.message, callback=langfuse_callback_handler
+                request.message, context, callback=langfuse_callback_handler
             ):
                 answer.append(chunk)
                 yield json.dumps({"type": "chunk", "data": chunk})
-            yield json.dumps({"type": "metadata", "data": "0"})
+            yield json.dumps({"type": "metadata", "data": metadata})
         except Exception as e:
             import traceback
 

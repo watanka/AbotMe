@@ -1,4 +1,5 @@
 import React, { useEffect, useRef, useState } from "react";
+import ReactMarkdown from "react-markdown";
 
 export default function ChatBot({ onMetadata }) {
   const [open, setOpen] = useState(false);
@@ -9,8 +10,8 @@ export default function ChatBot({ onMetadata }) {
   const [loading, setLoading] = useState(false);
   const messagesEndRef = useRef(null);
   // 패널 사이즈 상태
-  const [panelWidth, setPanelWidth] = useState(320);
-  const [panelHeight, setPanelHeight] = useState(420);
+  const [panelWidth, setPanelWidth] = useState(420);
+  const [panelHeight, setPanelHeight] = useState(600);
   const resizingRef = useRef(false);
   const startPosRef = useRef({ x: 0, y: 0, w: 0, h: 0 });
 
@@ -34,8 +35,8 @@ export default function ChatBot({ onMetadata }) {
     if (!resizingRef.current) return;
     const dx = e.clientX - startPosRef.current.x;
     const dy = e.clientY - startPosRef.current.y;
-    setPanelWidth(Math.max(240, Math.min(480, startPosRef.current.w + dx)));
-    setPanelHeight(Math.max(320, Math.min(700, startPosRef.current.h + dy)));
+    setPanelWidth(Math.max(320, Math.min(700, startPosRef.current.w + dx)));
+    setPanelHeight(Math.max(400, Math.min(1000, startPosRef.current.h + dy)));
   };
 
   // 리사이즈 종료
@@ -94,7 +95,7 @@ export default function ChatBot({ onMetadata }) {
               updated[updated.length - 1] = { ...botMsg };
               return updated;
             });
-          } else if (parsed.type === "metadata" && metadata === null) {
+          } else if (parsed.type === "metadata") {
             metadata = parsed.data;
             if (onMetadata) onMetadata(metadata);
           } else if (parsed.type === "error") {
@@ -143,10 +144,10 @@ export default function ChatBot({ onMetadata }) {
           style={{
             width: panelWidth,
             height: panelHeight,
-            minWidth: 240,
-            minHeight: 320,
-            maxWidth: 480,
-            maxHeight: 700,
+            minWidth: 320,
+            minHeight: 400,
+            maxWidth: 700,
+            maxHeight: 1000,
             position: 'relative',
             overflow: 'hidden',
             zIndex: 50
@@ -179,14 +180,16 @@ export default function ChatBot({ onMetadata }) {
                         : "bg-gray-100 text-gray-700"}
                     `}
                   >
-                    {showLoadingDots ? (
+                    {(showLoadingDots || (isLast && isBot && loading && !msg.content)) ? (
                       <span className="flex gap-1 items-center h-5">
                         <span className="w-2 h-2 bg-gray-400 rounded-full animate-bounce [animation-delay:-0.3s]"></span>
                         <span className="w-2 h-2 bg-gray-400 rounded-full animate-bounce [animation-delay:-0.15s]"></span>
                         <span className="w-2 h-2 bg-gray-400 rounded-full animate-bounce"></span>
                       </span>
                     ) : (
-                      msg.content
+                      msg.role === "bot"
+                        ? <div className="prose prose-sm max-w-none whitespace-pre-wrap"><ReactMarkdown>{msg.content}</ReactMarkdown></div>
+                        : msg.content
                     )}
                   </div>
                 </div>

@@ -1,10 +1,11 @@
+from app.database.models.base import Base
 from app.database.repositories.answer_repository import AnswerRepository
 from app.database.repositories.chunk_repository import ChunkRepository
 from app.database.repositories.chunkgroup_repository import ChunkGroupRepository
 from app.database.repositories.question_repository import QuestionRepository
 from app.database.repositories.resume_repository import ResumeRepository
 from app.database.repositories.tag_repository import TagRepository
-from app.database.session import get_session
+from app.database.session import engine, get_session
 
 
 class UnitOfWork:
@@ -35,3 +36,12 @@ class UnitOfWork:
     def commit(self):
         if self.session:
             self.session.commit()
+
+    def drop_table(self):
+        try:
+            Base.metadata.drop_all(engine)
+        except:
+            print("[INFO] 테이블 삭제X")
+
+    def create_table(self):
+        Base.metadata.create_all(engine)
