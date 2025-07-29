@@ -2,25 +2,11 @@
 AI 챗봇 웹 애플리케이션입니다. 챗봇을 기반으로 사용자의 질문에 내 정보(개발자 신은성)를 제공합니다.  
 
 ## 데모 영상
-<iframe width="560" height="315" src="https://www.youtube.com/embed/93ThYTHi6wY" 
-title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+[![데모 영상](https://img.youtube.com/vi/93ThYTHi6wY/0.jpg)](https://www.youtube.com/watch?v=93ThYTHi6wY)
 
 
-<a href="https://watanka.github.io/AbotMe/" target="_blank" style="
-  display: inline-block;
-  padding: 0.45em 1em;
-  font-size: 0.98em;
-  font-weight: bold;
-  color: #fff;
-  background: linear-gradient(90deg, #4f8cff 0%, #6dd5ed 100%);
-  border-radius: 999px;
-  box-shadow: 0 1px 4px rgba(79,140,255,0.13);
-  text-decoration: none;
-  margin: 8px 0;
-  transition: background 0.2s;
-">
-🚀 신은성 이력서 챗봇 사용해보기
-</a>
+
+[🚀 신은성 이력서 챗봇 사용해보기](https://watanka.github.io/AbotMe/)
 
 
 # Features
