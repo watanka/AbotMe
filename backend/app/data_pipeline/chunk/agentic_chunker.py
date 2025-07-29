@@ -62,21 +62,21 @@ class AgenticMetadataChunker(Chunker):
         else:
             llm_output = runnable.invoke({"input": llm_input})
 
-        result_chunks = [
-            [
-                {
-                    "label": label,
-                    "tags": t.tags,
-                    "name": t.name,
-                    "chunk_text": meta_list[label]["text"],
-                    "x0": meta_list[label]["x0"],
-                    "top": meta_list[label]["top"],
-                    "x1": meta_list[label]["x1"],
-                    "bottom": meta_list[label]["bottom"],
-                    "page_id": meta_list[label]["page_id"],
-                }
-                for label in t.labels
-            ]
-            for t in llm_output.root
-        ]
-        return result_chunks
+        # result_chunks = [
+        #     [
+        #         {
+        #             "label": label,
+        #             "tags": t.tags,
+        #             "name": t.name,
+        #             "chunk_text": meta_list[label]["text"],
+        #             "x0": meta_list[label]["x0"],
+        #             "top": meta_list[label]["top"],
+        #             "x1": meta_list[label]["x1"],
+        #             "bottom": meta_list[label]["bottom"],
+        #             "page_id": meta_list[label]["page_id"],
+        #         }
+        #         for label in t.labels
+        #     ]
+        #     for t in llm_output.root
+        # ]
+        return llm_output.root

@@ -44,11 +44,21 @@ def upload_resume(
     qna_service: QnAService = Depends(get_qna_service),
     uow: UnitOfWork = Depends(get_uow),
 ):
+
+    # graph DB 초기화
+    with graph_db._driver.session() as session:
+        session.run("MATCH (n) DETACH DELETE n")
+    print("[INFO] graph DB 초기화 완료")
+    # rdb 초기화
+    # uow.drop_table()
+    print("[INFO] rdb 초기화 완료")
+
     # 실제 구현 시: 파일 저장, id/토큰 생성, DB 저장 등
     # TODO: 파일 저장 경로 수정
     save_path = f"{ASSETS_DIR}/{name}_{file.filename}"
     with open(save_path, "wb") as f:
         f.write(file.file.read())
+    print("[INFO] pdf 파일 저장 완료")
     # 벡터스토어 저장 (기존 파이프라인 활용)
     # run_resume_pipeline(save_path)
     resume = Resume(
@@ -57,14 +67,16 @@ def upload_resume(
         email=email,
         pdf_url=save_path,
     )
+    resume_id = resume.resume_id
     with uow:
         uow.resumes.add(resume)
         uow.commit()
-        questions = qna_service.generate_questions(resume)
+        # questions = qna_service.generate_questions(resume)
+    print("[INFO] 질문 생성 완료")
 
     # TODO: 비동기, 모듈화
 
-    run_graph_resume_pipeline(llm, save_path, graph_db)
+    run_graph_resume_pipeline(resume_id, llm, save_path, graph_db, uow)
     return {"public_url": os.path.basename(save_path)}
 
 
