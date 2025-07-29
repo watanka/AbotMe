@@ -84,7 +84,10 @@ def run_graph_resume_pipeline(
     # llm 결과로 text를 리턴하면 비용이 증가하기 때문에, meta_list에서 text 불러옴.
     processed_chunks = str(
         [
-            (",".join(c.labels), " ".join([meta_dict[l]["text"] for l in c.labels]))
+            (
+                ",".join(c.labels),
+                " ".join([meta_dict[label]["text"] for label in c.labels]),
+            )
             for c in chunks
         ]
     )
