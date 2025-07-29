@@ -18,13 +18,13 @@ export default function HighlightOverlay({ highlights, pageWidth, pageHeight, pd
     return (
         <>
             {highlights.map((hl, i) => {
-                const bbox = hl.bbox || hl; // 유연성
+                const bbox = hl; // 유연성
                 if (
                     bbox == null ||
                     bbox.x0 == null || bbox.x1 == null || bbox.top == null || bbox.bottom == null
                 ) return null;
-                // 면적 확장 (15%)
-                const EXPAND = 0.15;
+                // 면적 확장 (2%)
+                const EXPAND = 0.02;
                 let left = bbox.x0 * scaleX;
                 let top = bbox.top * scaleY;
                 let width = (bbox.x1 - bbox.x0) * scaleX;
