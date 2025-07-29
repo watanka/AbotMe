@@ -50,7 +50,8 @@ def upload_resume(
         session.run("MATCH (n) DETACH DELETE n")
     print("[INFO] graph DB 초기화 완료")
     # rdb 초기화
-    # uow.drop_table()
+    uow.drop_table()
+    uow.create_table()
     print("[INFO] rdb 초기화 완료")
 
     # 실제 구현 시: 파일 저장, id/토큰 생성, DB 저장 등

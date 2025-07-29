@@ -180,7 +180,7 @@ export default function ChatBot({ onMetadata }) {
                         : "bg-gray-100 text-gray-700"}
                     `}
                   >
-                    {showLoadingDots ? (
+                    {(showLoadingDots || (isLast && isBot && loading && !msg.content)) ? (
                       <span className="flex gap-1 items-center h-5">
                         <span className="w-2 h-2 bg-gray-400 rounded-full animate-bounce [animation-delay:-0.3s]"></span>
                         <span className="w-2 h-2 bg-gray-400 rounded-full animate-bounce [animation-delay:-0.15s]"></span>

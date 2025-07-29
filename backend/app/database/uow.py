@@ -38,4 +38,10 @@ class UnitOfWork:
             self.session.commit()
 
     def drop_table(self):
-        Base.metadata.drop_all(engine)
+        try:
+            Base.metadata.drop_all(engine)
+        except:
+            print("[INFO] 테이블 삭제X")
+
+    def create_table(self):
+        Base.metadata.create_all(engine)

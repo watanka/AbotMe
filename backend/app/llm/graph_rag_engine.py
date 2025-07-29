@@ -94,6 +94,6 @@ class GraphRAGEngine:
         self, msg: str, context: dict, callback: Optional[Callable] = None
     ):
         filled_prompt = self.qa_prompt.format_messages(msg=msg, context=str(context))
+        print("filled_prompt: ", filled_prompt)
         for chunk in self.llm.stream(filled_prompt, config={"callbacks": [callback]}):
-            yield chunk.content
             yield chunk.content

@@ -126,7 +126,11 @@ def stream_graph_chat_response(
         try:
             answer = []
             context = graph_rag_engine.retrieve_context(request.message)
-            metadata = graph_rag_engine.get_metadata(context)
+            print("context: ", context)
+            if context == "NO_CYPHER":
+                metadata = "0"
+            else:
+                metadata = graph_rag_engine.get_metadata(context)
             # metadata 정보 기반 분기: 사용자 답변 and PDF 하이라이트
             for chunk in graph_rag_engine.generate_answer(
                 request.message, context, callback=langfuse_callback_handler
