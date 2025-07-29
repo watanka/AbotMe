@@ -1,7 +1,8 @@
-from langchain_experimental.graph_transformers import LLMGraphTransformer
-from langchain_core.documents import Document
-from langchain_neo4j import Neo4jGraph
 from typing import List
+
+from langchain_core.documents import Document
+from langchain_experimental.graph_transformers import LLMGraphTransformer
+from langchain_neo4j import Neo4jGraph
 
 
 class GraphDBWriter:
@@ -12,19 +13,23 @@ class GraphDBWriter:
             llm=self.llm,
             additional_instructions="""
         You are graph expert who handles resume information into graph database. Following this instructions, turn these resume information into nodes and relationships.
-        - **input format consists of (label_id, text), and label_id is important information to trace original resume.**
+        - **input format consists of (label_id, text), and label_id is important information to trace original resume. and label_id is splitted by comma, so make sure it is saved as list in db.**
         - nodes: Applicant, Company, Project, School, SelfIntro, Activity, Certificate, TechStack, Achievement
         - relationships: WORKED_AT, ATTENDED, PARTICIPATED, OBTAINED, USES, BELONGS_TO, ACHIEVED
-        - Applicant Node can only have name, birth_date, email, github, label_id properties.
-        - Company Node can only have name, label_id properties.
-        - Project Node can only have name, background, label_id properties.
-        - School Node can only have name, date, label_id properties.
-        - SelfIntro Node can only have description, label_id properties.
-        - Activity Node can only have name, description, label_id properties.
-        - Certificate Node can only have name, date, label_id properties.
-        - TechStack Node can only have name, category, label_id properties.
-        - Achievement Node can only have problem, solution, metric, label_id properties.
-        - Make sure you keep id same as name.
+            - WORKED_AT: (start_date, end_date, role)
+            - ATTENDED: (date)
+            - PARTICIPATED: (start_date, end_date, role)
+            - OBTAINED: (date)
+        - Applicant Node can have name, birth_date, email, github, text, label_id properties. Applicant - USES -> SelfIntro, Applicant - WORKED_AT -> Company, Applicant - ATTENDED -> School, Applicant - PARTICIPATED -> Project, Applicant - OBTAINED -> Certificate, Applicant - USES -> TechStack, Applicant - ACHIEVED -> Achievement
+        - Company Node can have name, text, label_id properties. Applicant - WORKED_AT -> Company, Project - BELONGS_TO -> Company
+        - Project Node can have name, text, label_id properties. Applicant - PARTICIPATED -> Project, TechStack - USES -> Project, Achievement - ACHIEVED -> Project
+        - School Node can have name, text, label_id properties. Applicant - ATTENDED -> School
+        - SelfIntro Node can have text, label_id properties. Applicant - USES -> SelfIntro
+        - Activity Node can have name, text, label_id properties. Applicant - PARTICIPATED -> Activity
+        - Certificate Node can have name, text, label_id properties. Applicant - OBTAINED -> Certificate
+        - TechStack Node can have name, text, label_id properties. Applicant - USES -> TechStack
+        - Achievement Node can have problem, solution, metric, text, label_id properties. Applicant - ACHIEVED -> Achievement
+        - ALWAYS keep label's first letter as uppercase.
         """,
             allowed_nodes=[
                 "Applicant",
@@ -54,17 +59,19 @@ class GraphDBWriter:
                         "birth_date",
                         "email",
                         "github",
+                        "text",
                         "label_id",
                         # Company
                         "name",
+                        "text",
                         "label_id",
                         # Project
                         "name",
-                        "background",
+                        "text",
                         "label_id",
                         # School
                         "name",
-                        "date",
+                        "text",
                         "label_id",
                         # SelfIntro
                         "description",
@@ -75,7 +82,7 @@ class GraphDBWriter:
                         "label_id",
                         # Certificate
                         "name",
-                        "date",
+                        "text",
                         "label_id",
                         # TechStack
                         "name",
@@ -90,13 +97,9 @@ class GraphDBWriter:
                 )
             ),
             relationship_properties=[
-                # WORKED_AT, ATTENDED, PARTICIPATED_IN_PROJECT, PARTICIPATED_IN_ACTIVITY
                 "start_date",
                 "end_date",
                 "role",
-                # OBTAINED
-                "date",
-                # 기타 관계 속성 필요시 추가
             ],
             strict_mode=True,
         )
