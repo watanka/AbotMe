@@ -95,7 +95,7 @@ export default function ChatBot({ onMetadata }) {
               updated[updated.length - 1] = { ...botMsg };
               return updated;
             });
-          } else if (parsed.type === "metadata" && metadata === null) {
+          } else if (parsed.type === "metadata") {
             metadata = parsed.data;
             if (onMetadata) onMetadata(metadata);
           } else if (parsed.type === "error") {

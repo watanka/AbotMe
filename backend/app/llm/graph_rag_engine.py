@@ -67,12 +67,15 @@ class GraphRAGEngine:
         label_id_list = []
         for c in context:
             # label_id list가 str형식으로 저장. e.g) '["1-1", "1-2"]' : Str
-            label_id_list.extend(eval(c["label_id"]))
+            labels = c["label_id"]
+            if labels.startswith("[") and labels.endswith("]"):
+                label_id_list.extend(eval(labels))
+            else:
+                label_id_list.extend(labels.split(","))
         return label_id_list
 
     def get_metadata(self, context: dict):
         label_id_list = self._parse_label_id(context)
-
         metadata_result = []
         with self.uow:
             for label_id in label_id_list:
