@@ -16,6 +16,8 @@ class PDFResumeMetadataExtractor(Extractor):
                 words = page.extract_words(
                     x_tolerance=1, y_tolerance=1, keep_blank_chars=True
                 )
+                page_width = float(page.width)
+                page_height = float(page.height)
                 for idx, w in enumerate(words, 1):
                     text = w["text"].strip()
                     label_id = f"{page_num}-{idx}"
@@ -23,10 +25,9 @@ class PDFResumeMetadataExtractor(Extractor):
                         "page_id": page_num,
                         "label_id": label_id,
                         "text": text,
-                        "x0": w["x0"],
-                        "top": w["top"],
-                        "x1": w["x1"],
-                        "bottom": w["bottom"],
-                        # TODO: 좌표는 상대좌표 0 - 1 range로 변경 필요
+                        "x0": w["x0"] / page_width,
+                        "top": w["top"] / page_height,
+                        "x1": w["x1"] / page_width,
+                        "bottom": w["bottom"] / page_height,
                     }
         return results
