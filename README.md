@@ -6,7 +6,7 @@ AI 챗봇 웹 애플리케이션입니다. 챗봇을 기반으로 사용자의 �
 
 
 
-[🚀 신은성 이력서 챗봇 사용해보기](https://watanka.github.io/AbotMe/)
+~~[🚀 신은성 이력서 챗봇 사용해보기](https://watanka.github.io/AbotMe/)~~ (※Neo4j 무료 버젼을 사용하다보니, DB가 계속 죽는 문제가 있어서 링크는 지웁니다.)
 
 
 # Features
