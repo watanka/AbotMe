@@ -30,10 +30,14 @@ class ChromaVectorStore(VectorStore):
         return results
 
     def search(self, query: str, k: int = 3, filter_dict: dict = None) -> List[Any]:
-        retriever = self.db.as_retriever(search_type="mmr", search_kwargs={"k": k, "fetch_k": k*2})
+        retriever = self.db.as_retriever(
+            search_type="mmr", search_kwargs={"k": k, "fetch_k": k * 2}
+        )
         return retriever.invoke(query, filter=filter_dict)
 
-    def similarity_search(self, query: str, k: int = 5, filter_dict: dict = None) -> List[Any]:
+    def similarity_search(
+        self, query: str, k: int = 5, filter_dict: dict = None
+    ) -> List[Any]:
         return self.db.similarity_search(query, k=k, filter=filter_dict)
 
     def query_with_metadata(self, msg: dict, k: int = 5) -> List[Any]:

@@ -3,6 +3,7 @@ from langchain_core.prompts import PromptTemplate
 from langfuse import get_client
 from langchain.output_parsers import PydanticOutputParser
 from app.data_pipeline.chunk.agentic_chunker import ResumeChunkList
+
 load_dotenv()
 langfuse = get_client()
 
@@ -13,7 +14,11 @@ langfuse = get_client()
 
 resume_prompt = PromptTemplate(
     input_variables=["input"],
-    partial_variables={"format_instructions": PydanticOutputParser(pydantic_object=ResumeChunkList).get_format_instructions()},
+    partial_variables={
+        "format_instructions": PydanticOutputParser(
+            pydantic_object=ResumeChunkList
+        ).get_format_instructions()
+    },
     template="""
     System Prompt
 You are an expert in segmenting resume text into chunks optimized for vector database storage.
@@ -91,7 +96,7 @@ Structure each chunk to clearly show "who, when, where, what, how, and what resu
 
 Output Format:
 {format_instructions}
-"""
+""",
 ).partial(
     format_instructions=PydanticOutputParser(
         pydantic_object=ResumeChunkList

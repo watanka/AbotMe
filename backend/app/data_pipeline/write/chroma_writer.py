@@ -10,6 +10,7 @@ from langchain_google_genai import GoogleGenerativeAIEmbeddings
 from langchain_chroma import Chroma
 from langchain_core.documents import Document
 
+
 class ChromaVectorStoreWriter(StoreWriter):
     def __init__(self, vector_store: VectorStore):
         self.vector_store = vector_store
@@ -19,10 +20,10 @@ class ChromaVectorStoreWriter(StoreWriter):
         for i, chunk in enumerate(chunks):
             metadata = {
                 "chunk_type": chunk.chunk_type.value,
-                "search_summary": chunk.search_summary
+                "search_summary": chunk.search_summary,
             }
             metadata.update(chunk.metadata)
-            
+
             document = Document(page_content=chunk.content, metadata=metadata)
             self.vector_store.add_documents([document])
 

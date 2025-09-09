@@ -4,15 +4,15 @@ import os
 from pydantic import BaseModel
 from langchain.output_parsers import PydanticOutputParser
 
+
 class QueryType(BaseModel):
     chunk_type: str
-    
 
 
 llm = ChatGoogleGenerativeAI(
     model="gemini-1.5-flash",  # 가장 가벼운 공개 Gemini API 모델
     temperature=0,
-    google_api_key=os.getenv("GOOGLE_API_KEY")
+    google_api_key=os.getenv("GOOGLE_API_KEY"),
 )
 
 # Enum클래스의 list를 다 리스트업해준다
@@ -38,4 +38,3 @@ Now classify this sentence:
 """
     runnable = llm | PydanticOutputParser(pydantic_object=QueryType)
     return runnable.invoke(prompt).dict()
-    

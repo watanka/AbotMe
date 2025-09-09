@@ -13,12 +13,14 @@ class ChunkType(Enum):
     skills = "skills"
     certification = "certification"
 
+
 class ResumeChunk(BaseModel):
     content: str
     chunk_type: ChunkType
     metadata: Dict
     search_summary: str
-      
+
+
 class ResumeChunkList(BaseModel):
     chunks: List[ResumeChunk]
 
@@ -33,7 +35,7 @@ class AgenticTextChunker(Chunker):
     def chunk(
         self, parsed_text: str, callback: Optional[Callable] = None
     ) -> List[Dict]:
-        
+
         # 3. LLM 호출
         runnable = self.template | self.llm | self.parser
         if callback:
