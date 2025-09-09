@@ -21,7 +21,6 @@ find_graph_component_prompt = PromptTemplate(
     {node_information}
     [relationship information]
     {relationship_information}
-    
     [format instructions]
     {format_instructions}
     type should be either node or relationship.
