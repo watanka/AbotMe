@@ -32,7 +32,7 @@ def run_resume_pipeline(
 
     # Writer는 텍스트 청크 리스트를 저장한다고 가정
     writer.save(chunks)
-    print(f"[INFO] 청크 저장 완료")
+    print("[INFO] 청크 저장 완료")
 
 
 def run_graph_resume_pipeline(

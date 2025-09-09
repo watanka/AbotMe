@@ -1,16 +1,17 @@
 import os
 
-from app.data_pipeline.extract.base import Extractor
-from app.data_pipeline.extract import PDFResumeExtractor
-
 from app.data_pipeline.chunk import AgenticTextChunker
+from app.data_pipeline.extract import PDFResumeExtractor
+from app.data_pipeline.extract.base import Extractor
 from app.data_pipeline.prompts import (
     chat_prompt,
     qna_prompt,
+    resume_prompt,
     text2cypher_prompt,
     user_query_prompt,
-    resume_prompt,
 )
+from app.data_pipeline.write.chroma_writer import ChromaVectorStoreWriter
+from app.data_pipeline.write.neo4j_writer import GraphDBWriter
 from app.database.uow import UnitOfWork
 from app.llm.graph_rag_engine import GraphRAGEngine
 from app.llm.rag_engine import RAGEngine
@@ -18,8 +19,6 @@ from app.llm.user_message_handler import UserMessageHandler
 from app.llm.vector_store import VectorStore
 from app.llm.vector_store.chroma import ChromaVectorStore
 from app.llm.vector_store.embedding import GeminiEmbeddingModel
-from app.data_pipeline.write.chroma_writer import ChromaVectorStoreWriter
-from app.data_pipeline.write.neo4j_writer import GraphDBWriter
 from app.services.qna_service import QnAService
 from dotenv import load_dotenv
 from fastapi import Depends
@@ -46,11 +45,6 @@ def get_llm():
 
     # llm = LangChainGeminiClient().llm
     return llm
-
-
-def get_extractor() -> Extractor:
-    # QnA 서비스 호환을 위해 label_id 기반 메타 추출기를 유지
-    return PDFResumeMetadataExtractor()
 
 
 def get_text_extractor() -> Extractor:
@@ -104,7 +98,7 @@ def get_user_message_handler(
 
 
 def get_qna_service(
-    extractor: Extractor = Depends(get_extractor),
+    extractor: Extractor = Depends(get_text_extractor),
     vector_store: VectorStore = Depends(get_vector_store),
     llm=Depends(get_llm),
     uow: UnitOfWork = Depends(get_uow),
