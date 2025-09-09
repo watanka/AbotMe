@@ -13,7 +13,7 @@ class VectorStore(ABC):
     """
 
     @abstractmethod
-    def add_documents(self, documents: List[str], **kwargs) -> List[str]:
+    def add_texts(self, texts: List[str], **kwargs) -> List[str]:
         """
         텍스트 문서 리스트를 벡터로 임베딩 후 저장.
         :param documents: 임베딩할 텍스트 리스트

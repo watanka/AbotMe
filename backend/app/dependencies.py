@@ -1,15 +1,17 @@
 import os
 
+from app.data_pipeline.chunk import AgenticTextChunker
+from app.data_pipeline.extract import PDFResumeExtractor
 from app.data_pipeline.extract.base import Extractor
-from app.data_pipeline.extract.pdf_resume_metadata_extractor import (
-    PDFResumeMetadataExtractor,
-)
 from app.data_pipeline.prompts import (
     chat_prompt,
     qna_prompt,
+    resume_prompt,
     text2cypher_prompt,
     user_query_prompt,
 )
+from app.data_pipeline.write.chroma_writer import ChromaVectorStoreWriter
+from app.data_pipeline.write.neo4j_writer import GraphDBWriter
 from app.database.uow import UnitOfWork
 from app.llm.graph_rag_engine import GraphRAGEngine
 from app.llm.rag_engine import RAGEngine
@@ -45,8 +47,14 @@ def get_llm():
     return llm
 
 
-def get_extractor():
-    return PDFResumeMetadataExtractor()
+def get_text_extractor() -> Extractor:
+    # 파이프라인 전용: 텍스트만 추출
+    return PDFResumeExtractor()
+
+
+def get_resume_chunker(llm=Depends(get_llm)):
+    # 이력서 청킹 프롬프트 사용
+    return AgenticTextChunker(template=resume_prompt, llm=llm)
 
 
 def get_vector_store() -> VectorStore:
@@ -54,8 +62,11 @@ def get_vector_store() -> VectorStore:
     return vector_store
 
 
-def get_graph_db():
+def get_vector_store_writer(vector_store: VectorStore = Depends(get_vector_store)):
+    return ChromaVectorStoreWriter(vector_store)
 
+
+def get_graph_db():
     return Neo4jGraph(refresh_schema=False)
 
 
@@ -87,9 +98,16 @@ def get_user_message_handler(
 
 
 def get_qna_service(
-    extractor: Extractor = Depends(get_extractor),
+    extractor: Extractor = Depends(get_text_extractor),
     vector_store: VectorStore = Depends(get_vector_store),
     llm=Depends(get_llm),
     uow: UnitOfWork = Depends(get_uow),
 ) -> QnAService:
     return QnAService(extractor, vector_store, qna_prompt, uow, llm)
+
+
+def get_graph_db_writer(
+    graph_db: Neo4jGraph = Depends(get_graph_db),
+    llm=Depends(get_llm),
+):
+    return GraphDBWriter(graph_db, llm, GeminiEmbeddingModel().get_model())

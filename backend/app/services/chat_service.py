@@ -5,7 +5,7 @@ from app.llm.graph_rag_engine import GraphRAGEngine
 from app.llm.rag_engine import RAGEngine
 from app.llm.user_message_handler import UserMessageHandler
 from app.models.schemas import ChatRequest, ChatResponse, HistoryItem
-from app.services.history_service import add_history
+from app.services.history_service import add_history, get_history
 from fastapi.responses import StreamingResponse
 from langfuse.langchain import CallbackHandler
 
@@ -37,8 +37,6 @@ def get_chat_response(
 
 def stream_chat_response(
     rag_engine: RAGEngine,
-    user_message_handler: UserMessageHandler,
-    uow: UnitOfWork,
     request: ChatRequest,
 ):
     """
@@ -52,11 +50,9 @@ def stream_chat_response(
             )
         try:
             answer = []
-            user_message_metadata = user_message_handler.process(request.message)
-            user_message = user_message_metadata.content
 
             # metadata 정보 기반 분기: 사용자 답변 and PDF 하이라이트
-            context_docs_metadata = rag_engine.retrieve_context(user_message_metadata)
+            context_docs_metadata = rag_engine.retrieve_context(request.message)
             context = "\n".join(
                 [
                     getattr(doc, "page_content", str(doc))
@@ -67,44 +63,46 @@ def stream_chat_response(
             # metadata, doc.metadata의 chunk_group_id 읽어옴.
             # chunk_group_id로 ChunkGroup 읽은 후, 속한 Chunk들 다 읽어옴.
             # uow 활용
-            metadata_list = [doc.metadata for doc in context_docs_metadata]
-            metadata_result = []
-            with uow:
-                for metadata in metadata_list:
-                    chunk_group = uow.chunk_groups.get_by_id(
-                        metadata.get("chunk_group_id")
-                    )
-                    if not chunk_group:
-                        continue
-                    chunks = uow.chunks.get_by_chunk_group_id(chunk_group.id)
-                    for chunk in chunks:
-                        metadata_result.append(
-                            {
-                                "x0": chunk.x0,
-                                "x1": chunk.x1,
-                                "top": chunk.top,
-                                "bottom": chunk.bottom,
-                                "page_id": chunk.page_id,
-                            }
-                        )
-
+            # metadata_list = [doc.metadata for doc in context_docs_metadata]
+            # metadata_result = []
+            # with uow:
+            #     for metadata in metadata_list:
+            #         chunk_group = uow.chunk_groups.get_by_id(
+            #             metadata.get("chunk_group_id")
+            #         )
+            #         if not chunk_group:
+            #             continue
+            #         chunks = uow.chunks.get_by_chunk_group_id(chunk_group.id)
+            #         for chunk in chunks:
+            #             metadata_result.append(
+            #                 {
+            #                     "x0": chunk.x0,
+            #                     "x1": chunk.x1,
+            #                     "top": chunk.top,
+            #                     "bottom": chunk.bottom,
+            #                     "page_id": chunk.page_id,
+            #                 }
+            #             )
+            answer = []
+            chat_history = get_history(request.session_id)
             for chunk in rag_engine.generate_answer(
-                user_message, context, callback=langfuse_callback_handler
+                request.message,
+                context,
+                chat_history,
+                callback=langfuse_callback_handler,
             ):
                 answer.append(chunk)
                 yield json.dumps({"type": "chunk", "data": chunk})
-            yield json.dumps({"type": "metadata", "data": metadata_result})
+            if request.session_id:
+                add_history(
+                    request.session_id, HistoryItem(role="bot", message="".join(answer))
+                )
         except Exception as e:
             import traceback
 
             traceback.print_exc()
             yield json.dumps(
                 {"type": "error", "data": f"[ERROR: LLM 호출 실패] {str(e)}"}
-            )
-        if request.session_id:
-            # 비동기 호출
-            add_history(
-                request.session_id, HistoryItem(role="bot", message="".join(answer))
             )
 
     return StreamingResponse(answer_stream(), media_type="text/plain")

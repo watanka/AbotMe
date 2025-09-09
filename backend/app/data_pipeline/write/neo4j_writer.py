@@ -1,14 +1,16 @@
 from typing import List
 
+from app.llm.vector_store.embedding import GeminiEmbeddingModel
 from langchain_core.documents import Document
 from langchain_experimental.graph_transformers import LLMGraphTransformer
 from langchain_neo4j import Neo4jGraph
 
 
 class GraphDBWriter:
-    def __init__(self, graph_db: Neo4jGraph, llm):
+    def __init__(self, graph_db: Neo4jGraph, llm, embedding):
         self.graph_db = graph_db
         self.llm = llm
+        self.embedding = embedding
         self.transformer = LLMGraphTransformer(
             llm=self.llm,
             additional_instructions="""
@@ -105,7 +107,8 @@ class GraphDBWriter:
         )
 
     def convert_text_to_graph(self, text: str):
-        doc = Document(page_content=text)
+        embedding = self.embedding.embed_query(text)
+        doc = Document(page_content=text, metadata={"embedding": embedding})
         return self.transformer.convert_to_graph_documents([doc])
 
     def save(self, docs: List[dict]):

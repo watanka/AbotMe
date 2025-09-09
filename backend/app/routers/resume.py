@@ -3,12 +3,20 @@ import uuid
 from datetime import datetime
 from typing import List
 
+from app.data_pipeline.chunk.base import Chunker
+from app.data_pipeline.extract.base import Extractor
 from app.database.models.answer import Answer
 from app.database.models.question import Question
 from app.database.models.resume import Resume
 from app.database.uow import UnitOfWork
-from app.dependencies import get_graph_db, get_llm, get_qna_service, get_uow
-from app.llm.graph_rag_engine import GraphRAGEngine
+from app.dependencies import (
+    get_graph_db_writer,
+    get_qna_service,
+    get_resume_chunker,
+    get_text_extractor,
+    get_uow,
+    get_vector_store_writer,
+)
 from app.services.data_service import run_graph_resume_pipeline, run_resume_pipeline
 
 # 기존 서비스 함수 재사용
@@ -39,20 +47,12 @@ def upload_resume(
     file: UploadFile = File(...),
     name: str = Form(...),
     email: str = Form(...),
-    llm=Depends(get_llm),
-    graph_db: Neo4jGraph = Depends(get_graph_db),
-    qna_service: QnAService = Depends(get_qna_service),
     uow: UnitOfWork = Depends(get_uow),
+    extractor: Extractor = Depends(get_text_extractor),
+    chunker: Chunker = Depends(get_resume_chunker),
+    vector_store_writer=Depends(get_vector_store_writer),
+    graph_db_writer=Depends(get_graph_db_writer),
 ):
-
-    # graph DB 초기화
-    with graph_db._driver.session() as session:
-        session.run("MATCH (n) DETACH DELETE n")
-    print("[INFO] graph DB 초기화 완료")
-    # rdb 초기화
-    uow.drop_table()
-    uow.create_table()
-    print("[INFO] rdb 초기화 완료")
 
     # 실제 구현 시: 파일 저장, id/토큰 생성, DB 저장 등
     # TODO: 파일 저장 경로 수정
@@ -68,7 +68,7 @@ def upload_resume(
         email=email,
         pdf_url=save_path,
     )
-    resume_id = resume.resume_id
+    resume_pydantic = convert_resume_dbmodel_to_pydantic(resume)
     with uow:
         uow.resumes.add(resume)
         uow.commit()
@@ -76,8 +76,8 @@ def upload_resume(
     print("[INFO] 질문 생성 완료")
 
     # TODO: 비동기, 모듈화
-
-    run_graph_resume_pipeline(resume_id, llm, save_path, graph_db, uow)
+    run_resume_pipeline(resume_pydantic, extractor, chunker, vector_store_writer)
+    # run_graph_resume_pipeline(resume_pydantic, extractor, chunker, graph_db_writer)
     return {"public_url": os.path.basename(save_path)}
 
 

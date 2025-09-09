@@ -1,9 +1,11 @@
+from app.database.session import init_db
 from app.middleware.cors import setup_cors
 from app.routers import chat, faq, history, pdf, resume, token, vector_store
 from fastapi import FastAPI
 
 
 def create_app():
+    init_db()
     app = FastAPI(redirect_slashes=False)
 
     setup_cors(app)

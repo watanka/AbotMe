@@ -22,6 +22,9 @@ class HistoryItem(BaseModel):
     role: Literal["user", "bot"]
     message: str
 
+    def format(self):
+        return f"{self.role}: {self.message}"
+
 
 class TokenVerifyRequest(BaseModel):
     token: str
