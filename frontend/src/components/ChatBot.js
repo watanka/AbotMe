@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from "react";
 import ReactMarkdown from "react-markdown";
 
-export default function ChatBot({ onMetadata }) {
+export default function ChatBot() {
   const [open, setOpen] = useState(false);
   const [messages, setMessages] = useState([
     { role: "bot", content: "안녕하세요! 궁금한 점을 물어보세요." }
@@ -64,7 +64,7 @@ export default function ChatBot({ onMetadata }) {
     setMessages(msgs => [...msgs, botMsg]);
 
     try {
-      const res = await fetch(`${process.env.REACT_APP_API_URL}/chat/graph/`, {
+      const res = await fetch(`${process.env.REACT_APP_API_URL}/chat/`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ message: input })
@@ -75,7 +75,6 @@ export default function ChatBot({ onMetadata }) {
       const decoder = new TextDecoder("utf-8");
       let done = false;
 
-      let metadata = null;
       while (!done) {
         const { value, done: doneReading } = await reader.read();
         done = doneReading;
@@ -95,9 +94,6 @@ export default function ChatBot({ onMetadata }) {
               updated[updated.length - 1] = { ...botMsg };
               return updated;
             });
-          } else if (parsed.type === "metadata") {
-            metadata = parsed.data;
-            if (onMetadata) onMetadata(metadata);
           } else if (parsed.type === "error") {
             setMessages(prev => [
               ...prev.slice(0, -1),

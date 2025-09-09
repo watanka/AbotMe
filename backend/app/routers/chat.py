@@ -18,11 +18,9 @@ router = APIRouter()
 @router.post("/")
 async def chat(
     request: ChatRequest,
-    user_message_handler: UserMessageHandler = Depends(get_user_message_handler),
     rag_engine: RAGEngine = Depends(get_rag_engine),
-    uow: UnitOfWork = Depends(get_uow),
 ):
-    return stream_chat_response(rag_engine, user_message_handler, uow, request)
+    return stream_chat_response(rag_engine, request)
 
 
 @router.post("/graph/")

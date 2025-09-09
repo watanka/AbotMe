@@ -110,8 +110,8 @@ class QnAService:
             if not question:
                 return False
 
-            self.vector_store.add_documents(
-                documents=[f"Q:{question.question}\nA:{latest_answer.answer}"],
+            self.vector_store.add_texts(
+                texts=[f"Q:{question.question}\nA:{latest_answer.answer}"],
                 ids=[question_id],
                 metadatas=[
                     {
