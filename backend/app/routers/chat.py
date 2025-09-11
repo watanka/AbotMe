@@ -2,12 +2,9 @@ from app.database.uow import UnitOfWork
 from app.dependencies import (
     get_graph_rag_engine,
     get_rag_engine,
-    get_uow,
-    get_user_message_handler,
 )
 from app.llm.graph_rag_engine import GraphRAGEngine
 from app.llm.rag_engine import RAGEngine
-from app.llm.user_message_handler import UserMessageHandler
 from app.models.schemas import ChatRequest
 from app.services.chat_service import stream_chat_response, stream_graph_chat_response
 from fastapi import APIRouter, Depends

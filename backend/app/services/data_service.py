@@ -44,16 +44,12 @@ def run_graph_resume_pipeline(
     print("[INFO] 업로드한 이력서 분석 시작")
     extracted = extractor.extract(resume.pdf_url)
     print("[INFO] PDF 텍스트 추출 완료")
-    print("[INFO] 메타정보 RDB 저장")
     langfuse_callback_handler = CallbackHandler()
 
     chunks = chunker.chunk(extracted, callback=langfuse_callback_handler)
     print("chunks: ", chunks)
     # 단순 텍스트 청커 출력 가정
-    processed_text = "\n".join(chunks)  # type: ignore[arg-type]
-
-    graph_documents_filtered = graph_db_writer.convert_text_to_graph(processed_text)
-    graph_db_writer.save(graph_documents_filtered)
+    graph_db_writer.save(chunks)
     print("[INFO] GraphDB 저장 완료")
 
 

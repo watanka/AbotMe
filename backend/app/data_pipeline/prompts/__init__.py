@@ -8,6 +8,7 @@ from .qna_prompt import qna_prompt
 from .resume_prompt import resume_prompt
 from .text_to_cypher_prompt import text2cypher_prompt
 from .user_query_prompt import user_query_prompt
+from .eval_prompt import eval_prompt
 
 __all__ = [
     "chat_prompt",
@@ -18,4 +19,5 @@ __all__ = [
     "find_graph_component_prompt",
     "GraphComponent",
     "parser",
+    "eval_prompt"
 ]

@@ -76,8 +76,8 @@ def upload_resume(
     print("[INFO] 질문 생성 완료")
 
     # TODO: 비동기, 모듈화
-    run_resume_pipeline(resume_pydantic, extractor, chunker, vector_store_writer)
-    # run_graph_resume_pipeline(resume_pydantic, extractor, chunker, graph_db_writer)
+    # run_resume_pipeline(resume_pydantic, extractor, chunker, vector_store_writer)
+    run_graph_resume_pipeline(resume_pydantic, extractor, chunker, graph_db_writer)
     return {"public_url": os.path.basename(save_path)}
 
 

@@ -59,30 +59,6 @@ def stream_chat_response(
                     for doc in context_docs_metadata
                 ]
             )
-
-            # metadata, doc.metadata의 chunk_group_id 읽어옴.
-            # chunk_group_id로 ChunkGroup 읽은 후, 속한 Chunk들 다 읽어옴.
-            # uow 활용
-            # metadata_list = [doc.metadata for doc in context_docs_metadata]
-            # metadata_result = []
-            # with uow:
-            #     for metadata in metadata_list:
-            #         chunk_group = uow.chunk_groups.get_by_id(
-            #             metadata.get("chunk_group_id")
-            #         )
-            #         if not chunk_group:
-            #             continue
-            #         chunks = uow.chunks.get_by_chunk_group_id(chunk_group.id)
-            #         for chunk in chunks:
-            #             metadata_result.append(
-            #                 {
-            #                     "x0": chunk.x0,
-            #                     "x1": chunk.x1,
-            #                     "top": chunk.top,
-            #                     "bottom": chunk.bottom,
-            #                     "page_id": chunk.page_id,
-            #                 }
-            #             )
             answer = []
             chat_history = get_history(request.session_id)
             for chunk in rag_engine.generate_answer(
@@ -123,20 +99,16 @@ def stream_graph_chat_response(
             )
         try:
             answer = []
+            # text2cypher
             context = graph_rag_engine.retrieve_context(request.message)
-            print("context: ", context)
-            if context == "NO_CYPHER" or context == "":
-                metadata = []
-            else:
-                metadata = graph_rag_engine.get_metadata(context)
-                print("metadata: ", metadata)
-            # metadata 정보 기반 분기: 사용자 답변 and PDF 하이라이트
             for chunk in graph_rag_engine.generate_answer(
-                request.message, context, callback=langfuse_callback_handler
+                request.message,
+                context,
+                chat_history=get_history(request.session_id),
+                callback=langfuse_callback_handler,
             ):
                 answer.append(chunk)
                 yield json.dumps({"type": "chunk", "data": chunk})
-            yield json.dumps({"type": "metadata", "data": metadata})
         except Exception as e:
             import traceback
 
