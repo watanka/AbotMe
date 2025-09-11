@@ -1,9 +1,6 @@
 import os
 
 import pytest
-from app.data_pipeline.chunk.agentic_chunker import AgenticMetadataChunker
-from app.data_pipeline.extract import PDFResumeMetadataExtractor
-from app.data_pipeline.prompts import resume_prompt
 from app.llm.vector_store.chroma import ChromaVectorStore
 from app.llm.vector_store.embedding.gemini import GeminiEmbeddingModel
 from langchain_openai import ChatOpenAI
