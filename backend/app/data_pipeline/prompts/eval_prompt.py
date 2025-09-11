@@ -1,4 +1,3 @@
-
 eval_prompt = """Role
 You are an expert data labeler evaluating model outputs for F1 score calculation. Compare the model's prediction against the ground truth reference output to assess performance.
 Evaluation Framework

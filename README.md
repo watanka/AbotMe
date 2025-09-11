@@ -51,4 +51,7 @@ make frontend
 - [코딩 원칙](docs/coding_principles.md)
 - [Git 컨벤션](docs/git_conventions.md)
 - [문서 작성 원칙](docs/documentation_principles.md)
-- [테스트](docs/testing.md)
+
+
+## 그래프 DB 설계
+- [그래프](docs/graph.md)
